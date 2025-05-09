@@ -1,13 +1,47 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import { Layout } from '@/components/Layout';
+import Dashboard from '@/components/Dashboard';
+import EmployeeDirectory from '@/components/EmployeeDirectory';
+import EmployeeProfile from '@/components/EmployeeProfile';
+import DepartmentManagement from '@/components/DepartmentManagement';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState('dashboard');
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <Layout activePage={activeTab}>
+      <Tabs
+        defaultValue="dashboard"
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full"
+      >
+        <TabsList className="mb-6 bg-white">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="employees">Employees</TabsTrigger>
+          <TabsTrigger value="employee-profile">Employee Profile</TabsTrigger>
+          <TabsTrigger value="departments">Departments</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="dashboard" className="mt-0">
+          <Dashboard />
+        </TabsContent>
+        
+        <TabsContent value="employees" className="mt-0">
+          <EmployeeDirectory />
+        </TabsContent>
+        
+        <TabsContent value="employee-profile" className="mt-0">
+          <EmployeeProfile />
+        </TabsContent>
+        
+        <TabsContent value="departments" className="mt-0">
+          <DepartmentManagement />
+        </TabsContent>
+      </Tabs>
+    </Layout>
   );
 };
 
