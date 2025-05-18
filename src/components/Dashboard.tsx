@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Card, 
@@ -13,7 +12,9 @@ import {
   UserMinus 
 } from "lucide-react";
 import { statsData } from '@/data/mockData';
-import { Chart } from '@/components/ui/chart';
+import { ChartContainer } from '@/components/ui/chart';
+import * as RechartsPrimitive from "recharts";
+import { ChartTooltipContent } from '@/components/ui/chart';
 
 const Dashboard = () => {
   return (
@@ -56,28 +57,33 @@ const Dashboard = () => {
             <CardTitle>Employee Distribution</CardTitle>
           </CardHeader>
           <CardContent className="h-80">
-            <Chart 
-              type="bar"
-              data={{
-                labels: ['Engineering', 'Marketing', 'Finance', 'HR', 'Product', 'Design', 'Sales', 'Support'],
-                datasets: [
-                  {
-                    label: 'Employees',
-                    data: [24, 12, 8, 6, 10, 7, 15, 18],
-                    backgroundColor: '#38b2ac'
-                  }
-                ]
+            <ChartContainer
+              config={{
+                employees: { color: "#38b2ac" }
               }}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                }
-              }}
-            />
+            >
+              {(props) => (
+                <RechartsPrimitive.BarChart
+                  data={[
+                    { name: 'Engineering', employees: 24 },
+                    { name: 'Marketing', employees: 12 },
+                    { name: 'Finance', employees: 8 },
+                    { name: 'HR', employees: 6 },
+                    { name: 'Product', employees: 10 },
+                    { name: 'Design', employees: 7 },
+                    { name: 'Sales', employees: 15 },
+                    { name: 'Support', employees: 18 },
+                  ]}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                  <RechartsPrimitive.XAxis dataKey="name" />
+                  <RechartsPrimitive.YAxis />
+                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                  <RechartsPrimitive.Bar dataKey="employees" fill="#38b2ac" />
+                </RechartsPrimitive.BarChart>
+              )}
+            </ChartContainer>
           </CardContent>
         </Card>
         <Card>
