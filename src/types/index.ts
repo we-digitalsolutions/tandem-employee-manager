@@ -1,4 +1,3 @@
-
 export interface Employee {
   id: string;
   firstName: string;
@@ -10,6 +9,7 @@ export interface Employee {
   hireDate: string;
   status: 'active' | 'inactive' | 'onLeave';
   avatar?: string;
+  jobDescription?: string;
 }
 
 export interface Department {
