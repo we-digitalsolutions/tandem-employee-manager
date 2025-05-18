@@ -1,3 +1,4 @@
+
 export interface Employee {
   id: string;
   firstName: string;
@@ -10,6 +11,8 @@ export interface Employee {
   status: 'active' | 'inactive' | 'onLeave';
   avatar?: string;
   jobDescription?: string;
+  password?: string;  // For demo purposes only
+  role?: 'admin' | 'manager' | 'employee';
 }
 
 export interface Department {
@@ -94,6 +97,7 @@ export interface User {
   role: 'admin' | 'manager' | 'employee';
   department: string;
   permissions: string[];
+  password?: string; // For demo purposes only
 }
 
 export interface Report {
@@ -111,4 +115,11 @@ export interface EmailNotification {
   subject: string;
   body: string;
   isHtml?: boolean;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  isAuthenticated: boolean;
 }
