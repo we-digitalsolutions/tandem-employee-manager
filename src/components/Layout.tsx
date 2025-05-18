@@ -18,7 +18,7 @@ import {
   User,
   Calendar,
   FileText,
-  FileChart
+  BarChart
 } from "lucide-react";
 
 interface LayoutProps {
@@ -58,7 +58,7 @@ function AppSidebar({ activePage }: { activePage: string }) {
     { name: 'Departments', href: '/departments', icon: Briefcase, id: 'departments' },
     { name: 'Leave Requests', href: '/leave-requests', icon: Calendar, id: 'leave-requests' },
     { name: 'Remote Requests', href: '/remote-requests', icon: FileText, id: 'remote-requests' },
-    { name: 'Reports', href: '/reports', icon: FileChart, id: 'reports' },
+    { name: 'Reports', href: '/reports', icon: BarChart, id: 'reports' },
     { name: 'Settings', href: '/settings', icon: Settings, id: 'settings' },
     { name: 'Employee Portal', href: '/employee-portal', icon: User, id: 'employee-portal' },
   ];

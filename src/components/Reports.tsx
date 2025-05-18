@@ -16,7 +16,7 @@ import { ChartContainer } from '@/components/ui/chart';
 import * as RechartsPrimitive from "recharts";
 import { ChartTooltipContent } from '@/components/ui/chart';
 import { Button } from '@/components/ui/button';
-import { Download, FileChart, CalendarCheck, FileText } from 'lucide-react';
+import { Download, BarChart, CalendarCheck, FileText } from 'lucide-react';
 
 const Reports = () => {
   const [reportType, setReportType] = useState('attendance');
@@ -70,7 +70,7 @@ const Reports = () => {
             Attendance
           </TabsTrigger>
           <TabsTrigger value="productivity" className="flex items-center gap-2">
-            <FileChart size={16} />
+            <BarChart size={16} />
             Productivity
           </TabsTrigger>
           <TabsTrigger value="leave" className="flex items-center gap-2">
@@ -92,7 +92,7 @@ const Reports = () => {
                   leave: { color: "#ecc94b" }
                 }}
               >
-                {() => (
+                {({ chartColors }) => (
                   <RechartsPrimitive.BarChart
                     data={attendanceData}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -123,7 +123,7 @@ const Reports = () => {
                   productivity: { color: "#805ad5" }
                 }}
               >
-                {() => (
+                {({ chartColors }) => (
                   <RechartsPrimitive.BarChart
                     data={departmentProductivityData}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -151,7 +151,7 @@ const Reports = () => {
                   value: { color: "#4c51bf" }
                 }}
               >
-                {() => (
+                {({ chartColors }) => (
                   <RechartsPrimitive.PieChart>
                     <RechartsPrimitive.Pie
                       data={leaveDistributionData}
