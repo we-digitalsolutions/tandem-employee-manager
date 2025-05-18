@@ -105,3 +105,10 @@ export interface Report {
   format: 'pdf' | 'csv' | 'excel';
   url?: string;
 }
+
+export interface EmailNotification {
+  to: string;
+  subject: string;
+  body: string;
+  isHtml?: boolean;
+}

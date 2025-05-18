@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Table, 
@@ -29,11 +28,13 @@ import {
   FileText,
   FilePlus,
   FileMinus,
-  Clock
+  Clock,
+  Mail
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { sendStatusUpdateEmail } from '@/utils/emailService';
 
 // Mock data for remote work requests
 const mockRemoteRequests: RemoteRequest[] = [
@@ -109,6 +110,9 @@ const RemoteRequestManagement = () => {
   const [viewRequest, setViewRequest] = useState<RemoteRequest | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState<string>("");
+  const [declineComment, setDeclineComment] = useState("");
 
   const form = useForm<NewRemoteRequestFormData>({
     defaultValues: {
@@ -122,22 +126,69 @@ const RemoteRequestManagement = () => {
     },
   });
 
+  // Mock function to get employee email (in a real app, this would come from a database)
+  const getEmployeeEmail = (employeeId: string): string => {
+    // This is a mock function returning fake emails
+    return `${employeeId}@company.com`;
+  };
+
   const handleApprove = (id: string) => {
-    setRequests(requests.map(req => 
+    const request = requests.find(req => req.id === id);
+    if (!request) return;
+    
+    const updatedRequests = requests.map(req => 
       req.id === id 
         ? { ...req, status: 'approved', reviewDate: new Date().toISOString().split('T')[0], reviewedBy: 'Current User' } 
         : req
-    ));
+    );
+    
+    setRequests(updatedRequests);
     toast.success('Remote work request approved');
+    
+    // Send email notification
+    sendStatusUpdateEmail(
+      request.employeeName,
+      getEmployeeEmail(request.employeeId),
+      'remote',
+      request.id,
+      'approved',
+      { startDate: request.startDate, endDate: request.endDate }
+    );
   };
 
-  const handleDecline = (id: string, comments: string = 'Request declined') => {
-    setRequests(requests.map(req => 
+  const openDeclineDialog = (id: string) => {
+    setSelectedRequestId(id);
+    setIsDeclineDialogOpen(true);
+  };
+
+  const handleDecline = () => {
+    const id = selectedRequestId;
+    const request = requests.find(req => req.id === id);
+    if (!request) return;
+    
+    const comments = declineComment.trim() || "Request declined";
+    
+    const updatedRequests = requests.map(req => 
       req.id === id 
         ? { ...req, status: 'declined', reviewDate: new Date().toISOString().split('T')[0], reviewedBy: 'Current User', comments } 
         : req
-    ));
+    );
+    
+    setRequests(updatedRequests);
+    setIsDeclineDialogOpen(false);
+    setDeclineComment("");
     toast.success('Remote work request declined');
+    
+    // Send email notification
+    sendStatusUpdateEmail(
+      request.employeeName,
+      getEmployeeEmail(request.employeeId),
+      'remote',
+      request.id,
+      'declined',
+      { startDate: request.startDate, endDate: request.endDate },
+      comments
+    );
   };
 
   const handleView = (request: RemoteRequest) => {
@@ -378,11 +429,32 @@ const RemoteRequestManagement = () => {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        onClick={() => handleDecline(request.id)}
+                        onClick={() => openDeclineDialog(request.id)}
                       >
                         <XCircle size={16} className="text-red-600" />
                       </Button>
                     </>
+                  )}
+                  {request.status !== 'pending' && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const email = getEmployeeEmail(request.employeeId);
+                        sendStatusUpdateEmail(
+                          request.employeeName,
+                          email,
+                          'remote',
+                          request.id,
+                          request.status as 'approved' | 'declined',
+                          { startDate: request.startDate, endDate: request.endDate },
+                          request.comments
+                        );
+                        toast.success(`Notification resent to ${request.employeeName} (${email})`);
+                      }}
+                    >
+                      <Mail size={16} className="text-blue-600" />
+                    </Button>
                   )}
                 </TableCell>
               </TableRow>
@@ -473,6 +545,28 @@ const RemoteRequestManagement = () => {
               )}
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeclineDialogOpen} onOpenChange={setIsDeclineDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Decline Remote Work Request</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <FormLabel>Reason for declining</FormLabel>
+              <Textarea 
+                placeholder="Enter reason for declining this request"
+                value={declineComment}
+                onChange={(e) => setDeclineComment(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter className="pt-4">
+            <Button variant="outline" onClick={() => setIsDeclineDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleDecline}>Decline Request</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

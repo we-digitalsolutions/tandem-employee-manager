@@ -63,7 +63,7 @@ const Dashboard = () => {
                 employees: { color: "#38b2ac" }
               }}
             >
-              {({ chartColors }) => (
+              {({ chartColors }: { chartColors: any }) => (
                 <RechartsPrimitive.BarChart
                   data={[
                     { name: 'Engineering', employees: 24 },
