@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/sonner';
-import { LeaveRequest } from '@/types';
+import { LeaveRequest, RequestStatus } from '@/types';
 import { 
   Calendar, 
   CheckCircle, 
@@ -138,7 +138,12 @@ const LeaveRequestManagement = () => {
     
     const updatedRequests = requests.map(req => 
       req.id === id 
-        ? { ...req, status: 'approved', reviewDate: new Date().toISOString().split('T')[0], reviewedBy: 'Current User' } 
+        ? { 
+            ...req, 
+            status: 'approved' as RequestStatus, 
+            reviewDate: new Date().toISOString().split('T')[0], 
+            reviewedBy: 'Current User' 
+          } 
         : req
     );
     
@@ -170,7 +175,13 @@ const LeaveRequestManagement = () => {
     
     const updatedRequests = requests.map(req => 
       req.id === id 
-        ? { ...req, status: 'declined', reviewDate: new Date().toISOString().split('T')[0], reviewedBy: 'Current User', comments } 
+        ? { 
+            ...req, 
+            status: 'declined' as RequestStatus, 
+            reviewDate: new Date().toISOString().split('T')[0], 
+            reviewedBy: 'Current User', 
+            comments 
+          } 
         : req
     );
     
