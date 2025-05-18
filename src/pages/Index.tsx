@@ -7,6 +7,9 @@ import EmployeeProfile from '@/components/EmployeeProfile';
 import DepartmentManagement from '@/components/DepartmentManagement';
 import LeaveRequestManagement from '@/components/LeaveRequestManagement';
 import RemoteRequestManagement from '@/components/RemoteRequestManagement';
+import Reports from '@/components/Reports';
+import Settings from '@/components/Settings';
+import EmployeePortal from '@/components/EmployeePortal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
@@ -27,6 +30,9 @@ const Index = () => {
           <TabsTrigger value="departments">Departments</TabsTrigger>
           <TabsTrigger value="leave-requests">Leave Requests</TabsTrigger>
           <TabsTrigger value="remote-requests">Remote Requests</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="employee-portal">Employee Portal</TabsTrigger>
         </TabsList>
         
         <TabsContent value="dashboard" className="mt-0">
@@ -51,6 +57,18 @@ const Index = () => {
         
         <TabsContent value="remote-requests" className="mt-0">
           <RemoteRequestManagement />
+        </TabsContent>
+        
+        <TabsContent value="reports" className="mt-0">
+          <Reports />
+        </TabsContent>
+        
+        <TabsContent value="settings" className="mt-0">
+          <Settings />
+        </TabsContent>
+        
+        <TabsContent value="employee-portal" className="mt-0">
+          <EmployeePortal />
         </TabsContent>
       </Tabs>
     </Layout>

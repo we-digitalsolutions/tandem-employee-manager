@@ -14,11 +14,11 @@ import {
   Users, 
   LayoutDashboard, 
   Briefcase, 
-  FileText, 
   Settings,
   User,
   Calendar,
-  FileEdit
+  FileText,
+  FileChart
 } from "lucide-react";
 
 interface LayoutProps {
@@ -57,9 +57,10 @@ function AppSidebar({ activePage }: { activePage: string }) {
     { name: 'Employees', href: '/employees', icon: Users, id: 'employees' },
     { name: 'Departments', href: '/departments', icon: Briefcase, id: 'departments' },
     { name: 'Leave Requests', href: '/leave-requests', icon: Calendar, id: 'leave-requests' },
-    { name: 'Remote Requests', href: '/remote-requests', icon: FileEdit, id: 'remote-requests' },
-    { name: 'Reports', href: '/reports', icon: FileText, id: 'reports' },
+    { name: 'Remote Requests', href: '/remote-requests', icon: FileText, id: 'remote-requests' },
+    { name: 'Reports', href: '/reports', icon: FileChart, id: 'reports' },
     { name: 'Settings', href: '/settings', icon: Settings, id: 'settings' },
+    { name: 'Employee Portal', href: '/employee-portal', icon: User, id: 'employee-portal' },
   ];
 
   return (

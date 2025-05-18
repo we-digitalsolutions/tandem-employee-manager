@@ -44,6 +44,8 @@ export interface DashboardStat {
 
 export type RequestStatus = 'pending' | 'approved' | 'declined';
 
+export type TimeDuration = 'full-day' | 'half-day-morning' | 'half-day-afternoon' | 'quarter-day-1' | 'quarter-day-2' | 'quarter-day-3' | 'quarter-day-4';
+
 export interface LeaveRequest {
   id: string;
   employeeId: string;
@@ -57,6 +59,7 @@ export interface LeaveRequest {
   reviewedBy?: string;
   reviewDate?: string;
   comments?: string;
+  duration?: TimeDuration;
 }
 
 export interface RemoteRequest {
@@ -72,6 +75,7 @@ export interface RemoteRequest {
   reviewDate?: string;
   comments?: string;
   location?: string;
+  duration?: TimeDuration;
 }
 
 export interface Notification {
@@ -81,4 +85,23 @@ export interface Notification {
   date: string;
   read: boolean;
   link?: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'manager' | 'employee';
+  department: string;
+  permissions: string[];
+}
+
+export interface Report {
+  id: string;
+  name: string;
+  type: 'attendance' | 'leave' | 'performance' | 'department' | 'custom';
+  generatedDate: string;
+  generatedBy: string;
+  format: 'pdf' | 'csv' | 'excel';
+  url?: string;
 }

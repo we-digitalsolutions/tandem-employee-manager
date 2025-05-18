@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Card, 
@@ -62,7 +63,7 @@ const Dashboard = () => {
                 employees: { color: "#38b2ac" }
               }}
             >
-              {(props) => (
+              {() => (
                 <RechartsPrimitive.BarChart
                   data={[
                     { name: 'Engineering', employees: 24 },

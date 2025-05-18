@@ -28,10 +28,12 @@ import {
   Plus,
   FileText,
   FilePlus,
-  FileMinus
+  FileMinus,
+  Clock
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Mock data for remote work requests
 const mockRemoteRequests: RemoteRequest[] = [
@@ -44,7 +46,8 @@ const mockRemoteRequests: RemoteRequest[] = [
     reason: 'Working on project remotely',
     status: 'pending',
     submittedDate: '2025-05-15',
-    location: 'Home Office'
+    location: 'Home Office',
+    duration: 'full-day'
   },
   {
     id: '2',
@@ -57,7 +60,8 @@ const mockRemoteRequests: RemoteRequest[] = [
     submittedDate: '2025-05-10',
     reviewedBy: 'Michael Brown',
     reviewDate: '2025-05-12',
-    location: 'Client Site - New York'
+    location: 'Client Site - New York',
+    duration: 'half-day-morning'
   },
   {
     id: '3',
@@ -70,7 +74,8 @@ const mockRemoteRequests: RemoteRequest[] = [
     submittedDate: '2025-04-30',
     reviewedBy: 'Michael Brown',
     reviewDate: '2025-05-02',
-    location: 'Home Office'
+    location: 'Home Office',
+    duration: 'full-day'
   },
   {
     id: '4',
@@ -84,7 +89,8 @@ const mockRemoteRequests: RemoteRequest[] = [
     reviewedBy: 'Michael Brown',
     reviewDate: '2025-05-19',
     comments: 'Team presence required in office for client visit',
-    location: 'Conference Center'
+    location: 'Conference Center',
+    duration: 'quarter-day-2'
   },
 ];
 
@@ -95,6 +101,7 @@ interface NewRemoteRequestFormData {
   endDate: string;
   reason: string;
   location: string;
+  duration: 'full-day' | 'half-day-morning' | 'half-day-afternoon' | 'quarter-day-1' | 'quarter-day-2' | 'quarter-day-3' | 'quarter-day-4';
 }
 
 const RemoteRequestManagement = () => {
@@ -111,6 +118,7 @@ const RemoteRequestManagement = () => {
       endDate: '',
       reason: '',
       location: '',
+      duration: 'full-day',
     },
   });
 
@@ -148,6 +156,7 @@ const RemoteRequestManagement = () => {
       location: data.location,
       status: 'pending',
       submittedDate: new Date().toISOString().split('T')[0],
+      duration: data.duration,
     };
     
     setRequests([...requests, newRequest]);
@@ -166,6 +175,21 @@ const RemoteRequestManagement = () => {
     if (status === 'approved') return <FilePlus className="h-4 w-4 mr-1 text-green-600" />;
     if (status === 'declined') return <FileMinus className="h-4 w-4 mr-1 text-red-600" />;
     return <FileText className="h-4 w-4 mr-1 text-yellow-600" />;
+  };
+
+  const getDurationLabel = (duration?: string) => {
+    if (!duration) return "Full Day";
+    
+    switch (duration) {
+      case 'full-day': return "Full Day (8 hours)";
+      case 'half-day-morning': return "Half Day - Morning (4 hours)";
+      case 'half-day-afternoon': return "Half Day - Afternoon (4 hours)";
+      case 'quarter-day-1': return "Quarter Day - 8:00-10:00";
+      case 'quarter-day-2': return "Quarter Day - 10:00-12:00";
+      case 'quarter-day-3': return "Quarter Day - 13:00-15:00";
+      case 'quarter-day-4': return "Quarter Day - 15:00-17:00";
+      default: return "Full Day";
+    }
   };
 
   return (
@@ -239,6 +263,34 @@ const RemoteRequestManagement = () => {
                     )}
                   />
                 </div>
+                
+                <FormField
+                  control={form.control}
+                  name="duration"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Duration</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select duration" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="full-day">Full Day (8 hours)</SelectItem>
+                          <SelectItem value="half-day-morning">Half Day - Morning (4 hours)</SelectItem>
+                          <SelectItem value="half-day-afternoon">Half Day - Afternoon (4 hours)</SelectItem>
+                          <SelectItem value="quarter-day-1">Quarter Day - 8:00-10:00</SelectItem>
+                          <SelectItem value="quarter-day-2">Quarter Day - 10:00-12:00</SelectItem>
+                          <SelectItem value="quarter-day-3">Quarter Day - 13:00-15:00</SelectItem>
+                          <SelectItem value="quarter-day-4">Quarter Day - 15:00-17:00</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
                 <FormField
                   control={form.control}
                   name="location"
@@ -280,6 +332,7 @@ const RemoteRequestManagement = () => {
             <TableRow>
               <TableHead>Employee</TableHead>
               <TableHead>Location</TableHead>
+              <TableHead>Dates</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Submitted</TableHead>
@@ -292,6 +345,12 @@ const RemoteRequestManagement = () => {
                 <TableCell>{request.employeeName}</TableCell>
                 <TableCell>{request.location}</TableCell>
                 <TableCell>{request.startDate} to {request.endDate}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3 text-gray-500" />
+                    <span className="text-sm">{getDurationLabel(request.duration)}</span>
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(request.status)}`}>
                     {getStatusIcon(request.status)}
@@ -358,6 +417,14 @@ const RemoteRequestManagement = () => {
                 <div>
                   <p className="text-sm font-medium text-gray-500">End Date</p>
                   <p>{viewRequest.endDate}</p>
+                </div>
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium text-gray-500">Duration</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <Clock className="h-4 w-4 text-gray-500" />
+                  <span>{getDurationLabel(viewRequest.duration)}</span>
                 </div>
               </div>
               
