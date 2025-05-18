@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Card, 
@@ -63,27 +62,25 @@ const Dashboard = () => {
                 employees: { color: "#38b2ac" }
               }}
             >
-              {(props) => (
-                <RechartsPrimitive.BarChart
-                  data={[
-                    { name: 'Engineering', employees: 24 },
-                    { name: 'Marketing', employees: 12 },
-                    { name: 'Finance', employees: 8 },
-                    { name: 'HR', employees: 6 },
-                    { name: 'Product', employees: 10 },
-                    { name: 'Design', employees: 7 },
-                    { name: 'Sales', employees: 15 },
-                    { name: 'Support', employees: 18 },
-                  ]}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                  <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
-                  <RechartsPrimitive.XAxis dataKey="name" />
-                  <RechartsPrimitive.YAxis />
-                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                  <RechartsPrimitive.Bar dataKey="employees" fill="#38b2ac" />
-                </RechartsPrimitive.BarChart>
-              )}
+              <RechartsPrimitive.BarChart
+                data={[
+                  { name: 'Engineering', employees: 24 },
+                  { name: 'Marketing', employees: 12 },
+                  { name: 'Finance', employees: 8 },
+                  { name: 'HR', employees: 6 },
+                  { name: 'Product', employees: 10 },
+                  { name: 'Design', employees: 7 },
+                  { name: 'Sales', employees: 15 },
+                  { name: 'Support', employees: 18 },
+                ]}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                <RechartsPrimitive.XAxis dataKey="name" />
+                <RechartsPrimitive.YAxis />
+                <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                <RechartsPrimitive.Bar dataKey="employees" fill="#38b2ac" />
+              </RechartsPrimitive.BarChart>
             </ChartContainer>
           </CardContent>
         </Card>

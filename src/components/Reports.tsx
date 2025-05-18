@@ -92,21 +92,19 @@ const Reports = () => {
                   leave: { color: "#ecc94b" }
                 }}
               >
-                {(props) => (
-                  <RechartsPrimitive.BarChart
-                    data={attendanceData}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                  >
-                    <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
-                    <RechartsPrimitive.XAxis dataKey="month" />
-                    <RechartsPrimitive.YAxis />
-                    <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                    <RechartsPrimitive.Legend />
-                    <RechartsPrimitive.Bar dataKey="present" stackId="a" fill="#38b2ac" name="Present" />
-                    <RechartsPrimitive.Bar dataKey="absent" stackId="a" fill="#f56565" name="Absent" />
-                    <RechartsPrimitive.Bar dataKey="leave" stackId="a" fill="#ecc94b" name="Leave" />
-                  </RechartsPrimitive.BarChart>
-                )}
+                <RechartsPrimitive.BarChart
+                  data={attendanceData}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                  <RechartsPrimitive.XAxis dataKey="month" />
+                  <RechartsPrimitive.YAxis />
+                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                  <RechartsPrimitive.Legend />
+                  <RechartsPrimitive.Bar dataKey="present" stackId="a" fill="#38b2ac" name="Present" />
+                  <RechartsPrimitive.Bar dataKey="absent" stackId="a" fill="#f56565" name="Absent" />
+                  <RechartsPrimitive.Bar dataKey="leave" stackId="a" fill="#ecc94b" name="Leave" />
+                </RechartsPrimitive.BarChart>
               </ChartContainer>
             </CardContent>
           </Card>
@@ -123,18 +121,16 @@ const Reports = () => {
                   productivity: { color: "#805ad5" }
                 }}
               >
-                {(props) => (
-                  <RechartsPrimitive.BarChart
-                    data={departmentProductivityData}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                  >
-                    <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
-                    <RechartsPrimitive.XAxis dataKey="department" />
-                    <RechartsPrimitive.YAxis />
-                    <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                    <RechartsPrimitive.Bar dataKey="productivity" fill="#805ad5" />
-                  </RechartsPrimitive.BarChart>
-                )}
+                <RechartsPrimitive.BarChart
+                  data={departmentProductivityData}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                  <RechartsPrimitive.XAxis dataKey="department" />
+                  <RechartsPrimitive.YAxis />
+                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                  <RechartsPrimitive.Bar dataKey="productivity" fill="#805ad5" />
+                </RechartsPrimitive.BarChart>
               </ChartContainer>
             </CardContent>
           </Card>
@@ -151,28 +147,26 @@ const Reports = () => {
                   value: { color: "#4c51bf" }
                 }}
               >
-                {(props) => (
-                  <RechartsPrimitive.PieChart>
-                    <RechartsPrimitive.Pie
-                      data={leaveDistributionData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {leaveDistributionData.map((entry, index) => (
-                        <RechartsPrimitive.Cell 
-                          key={`cell-${index}`} 
-                          fill={['#4c51bf', '#38b2ac', '#f56565', '#ecc94b', '#ed64a6', '#9f7aea'][index % 6]} 
-                        />
-                      ))}
-                    </RechartsPrimitive.Pie>
-                    <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                    <RechartsPrimitive.Legend />
-                  </RechartsPrimitive.PieChart>
-                )}
+                <RechartsPrimitive.PieChart>
+                  <RechartsPrimitive.Pie
+                    data={leaveDistributionData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {leaveDistributionData.map((entry, index) => (
+                      <RechartsPrimitive.Cell 
+                        key={`cell-${index}`} 
+                        fill={['#4c51bf', '#38b2ac', '#f56565', '#ecc94b', '#ed64a6', '#9f7aea'][index % 6]} 
+                      />
+                    ))}
+                  </RechartsPrimitive.Pie>
+                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                  <RechartsPrimitive.Legend />
+                </RechartsPrimitive.PieChart>
               </ChartContainer>
             </CardContent>
           </Card>
