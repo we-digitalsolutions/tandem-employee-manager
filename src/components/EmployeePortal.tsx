@@ -237,12 +237,43 @@ const EmployeePortal = () => {
     }
   };
 
-  const renderDurationSelect = (type: 'leave' | 'remote') => {
-    const form = type === 'leave' ? leaveForm : remoteForm;
-    
+  // Render duration select for leave requests
+  const renderLeaveDurationSelect = () => {
     return (
       <FormField
-        control={form.control}
+        control={leaveForm.control}
+        name="duration"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Duration</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duration" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="full-day">Full Day (8 hours)</SelectItem>
+                <SelectItem value="half-day-morning">Half Day - Morning (4 hours)</SelectItem>
+                <SelectItem value="half-day-afternoon">Half Day - Afternoon (4 hours)</SelectItem>
+                <SelectItem value="quarter-day-1">Quarter Day - 8:00-10:00</SelectItem>
+                <SelectItem value="quarter-day-2">Quarter Day - 10:00-12:00</SelectItem>
+                <SelectItem value="quarter-day-3">Quarter Day - 13:00-15:00</SelectItem>
+                <SelectItem value="quarter-day-4">Quarter Day - 15:00-17:00</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  };
+
+  // Render duration select for remote requests
+  const renderRemoteDurationSelect = () => {
+    return (
+      <FormField
+        control={remoteForm.control}
         name="duration"
         render={({ field }) => (
           <FormItem>
@@ -334,7 +365,7 @@ const EmployeePortal = () => {
                       />
                     </div>
                     
-                    {renderDurationSelect('leave')}
+                    {renderLeaveDurationSelect()}
                     
                     <FormField
                       control={leaveForm.control}
@@ -537,7 +568,7 @@ const EmployeePortal = () => {
                       />
                     </div>
                     
-                    {renderDurationSelect('remote')}
+                    {renderRemoteDurationSelect()}
 
                     <FormField
                       control={remoteForm.control}

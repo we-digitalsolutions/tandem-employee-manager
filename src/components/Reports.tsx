@@ -92,7 +92,7 @@ const Reports = () => {
                   leave: { color: "#ecc94b" }
                 }}
               >
-                {({ chartColors }) => (
+                {({ chartColors }: { chartColors: any }) => (
                   <RechartsPrimitive.BarChart
                     data={attendanceData}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -123,7 +123,7 @@ const Reports = () => {
                   productivity: { color: "#805ad5" }
                 }}
               >
-                {({ chartColors }) => (
+                {({ chartColors }: { chartColors: any }) => (
                   <RechartsPrimitive.BarChart
                     data={departmentProductivityData}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -151,7 +151,7 @@ const Reports = () => {
                   value: { color: "#4c51bf" }
                 }}
               >
-                {({ chartColors }) => (
+                {({ chartColors }: { chartColors: any }) => (
                   <RechartsPrimitive.PieChart>
                     <RechartsPrimitive.Pie
                       data={leaveDistributionData}
