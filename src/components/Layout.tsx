@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -16,7 +16,9 @@ import {
   Briefcase, 
   FileText, 
   Settings,
-  User
+  User,
+  Calendar,
+  FileEdit
 } from "lucide-react";
 
 interface LayoutProps {
@@ -54,6 +56,8 @@ function AppSidebar({ activePage }: { activePage: string }) {
     { name: 'Dashboard', href: '/', icon: LayoutDashboard, id: 'dashboard' },
     { name: 'Employees', href: '/employees', icon: Users, id: 'employees' },
     { name: 'Departments', href: '/departments', icon: Briefcase, id: 'departments' },
+    { name: 'Leave Requests', href: '/leave-requests', icon: Calendar, id: 'leave-requests' },
+    { name: 'Remote Requests', href: '/remote-requests', icon: FileEdit, id: 'remote-requests' },
     { name: 'Reports', href: '/reports', icon: FileText, id: 'reports' },
     { name: 'Settings', href: '/settings', icon: Settings, id: 'settings' },
   ];
@@ -69,7 +73,6 @@ function AppSidebar({ activePage }: { activePage: string }) {
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton
                 asChild
-                active={activePage === item.id}
                 className={activePage === item.id ? 'bg-sidebar-accent' : ''}
               >
                 <a href={item.href} className="flex items-center gap-4 px-3 py-2">

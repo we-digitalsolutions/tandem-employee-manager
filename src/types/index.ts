@@ -41,3 +41,44 @@ export interface DashboardStat {
   change?: number;
   changeType?: 'increase' | 'decrease';
 }
+
+export type RequestStatus = 'pending' | 'approved' | 'declined';
+
+export interface LeaveRequest {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  startDate: string;
+  endDate: string;
+  type: 'vacation' | 'sick' | 'personal' | 'maternity' | 'paternity' | 'bereavement';
+  reason: string;
+  status: RequestStatus;
+  submittedDate: string;
+  reviewedBy?: string;
+  reviewDate?: string;
+  comments?: string;
+}
+
+export interface RemoteRequest {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  status: RequestStatus;
+  submittedDate: string;
+  reviewedBy?: string;
+  reviewDate?: string;
+  comments?: string;
+  location?: string;
+}
+
+export interface Notification {
+  id: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  message: string;
+  date: string;
+  read: boolean;
+  link?: string;
+}
