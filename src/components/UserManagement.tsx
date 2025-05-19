@@ -44,7 +44,7 @@ import { employeesData } from '@/data/mockData';
 import { Employee } from '@/types';
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/sonner";
-import { Search, MoreHorizontal, Eye, Edit, Key, UserRound, Lock, Copy } from 'lucide-react';
+import { Search, MoreHorizontal, Eye, EyeOff, Edit, Key, UserRound, Lock, Copy } from 'lucide-react';
 
 import { 
   Form,
@@ -70,6 +70,9 @@ const UserManagement = () => {
   const [isResetPasswordDialogOpen, setIsResetPasswordDialogOpen] = useState(false);
   const [isEditUserDialogOpen, setIsEditUserDialogOpen] = useState(false);
   const [isViewUserDialogOpen, setIsViewUserDialogOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState<string | null>(null);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   
   const filteredUsers = users.filter(user => 
     user.firstName.toLowerCase().includes(search.toLowerCase()) ||
@@ -94,20 +97,19 @@ const UserManagement = () => {
   const handleResetPassword = () => {
     if (!selectedUser) return;
     
-    const newPassword = generatePassword();
+    const newGeneratedPassword = generatePassword();
+    setNewPassword(newGeneratedPassword);
+    setShowNewPassword(true);
+    
     const updatedUsers = users.map(user => 
       user.id === selectedUser.id 
-        ? { ...user, password: newPassword } 
+        ? { ...user, password: newGeneratedPassword } 
         : user
     );
     
     setUsers(updatedUsers);
-    setIsResetPasswordDialogOpen(false);
-    toast.success("Password has been reset successfully");
     
-    // In a real app, this would send the password to the user's email
-    // For demo purposes, we'll show it in another toast
-    toast.info(`New password for ${selectedUser.firstName}: ${newPassword}`);
+    toast.success("Password has been reset successfully");
   };
 
   const copyToClipboard = (text: string) => {
@@ -234,6 +236,7 @@ const UserManagement = () => {
                         onView={() => {
                           setSelectedUser(user);
                           setIsViewUserDialogOpen(true);
+                          setShowPassword(false);
                         }}
                         onEdit={() => {
                           setSelectedUser(user);
@@ -241,6 +244,7 @@ const UserManagement = () => {
                         }}
                         onResetPassword={() => {
                           setSelectedUser(user);
+                          setNewPassword(null);
                           setIsResetPasswordDialogOpen(true);
                         }}
                       />
@@ -301,9 +305,31 @@ const UserManagement = () => {
               <div>
                 <p className="text-sm font-medium text-gray-500">Password</p>
                 <div className="flex items-center mt-1">
-                  <div className="bg-gray-100 p-2 rounded-md flex-1">
-                    ••••••••••••
+                  <div className="bg-gray-100 p-2 rounded-md flex-1 font-mono">
+                    {showPassword ? selectedUser.password : '••••••••••••'}
                   </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-2"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 mr-1" />
+                    ) : (
+                      <Eye className="h-4 w-4 mr-1" />
+                    )}
+                    {showPassword ? "Hide" : "Show"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-2"
+                    onClick={() => copyToClipboard(selectedUser.password || '')}
+                  >
+                    <Copy className="h-4 w-4 mr-1" />
+                    Copy
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -474,12 +500,53 @@ const UserManagement = () => {
               The new password will be shown to you once, and you should share it with the user securely.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleResetPassword}>
-              Reset Password
-            </AlertDialogAction>
-          </AlertDialogFooter>
+          
+          {newPassword ? (
+            <>
+              <div className="my-4 p-4 bg-gray-50 rounded-md border">
+                <p className="text-sm font-medium text-gray-700 mb-2">New Password:</p>
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-md flex-1 font-mono border">
+                    {showNewPassword ? newPassword : '••••••••••••'}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-2"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="h-4 w-4 mr-1" />
+                    ) : (
+                      <Eye className="h-4 w-4 mr-1" />
+                    )}
+                    {showNewPassword ? "Hide" : "Show"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-2"
+                    onClick={() => copyToClipboard(newPassword)}
+                  >
+                    <Copy className="h-4 w-4 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setIsResetPasswordDialogOpen(false)}>
+                  Done
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          ) : (
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleResetPassword}>
+                Reset Password
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          )}
         </AlertDialogContent>
       </AlertDialog>
     </div>
