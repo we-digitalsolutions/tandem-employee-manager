@@ -34,7 +34,7 @@ const App = () => (
             <Route path="/user-management" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
             <Route path="/employee-portal" element={<ProtectedRoute><EmployeePortal /></ProtectedRoute>} />
             
-            {/* Redirect to login */}
+            {/* Catch-all route - redirect to 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

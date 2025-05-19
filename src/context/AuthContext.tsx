@@ -15,11 +15,29 @@ const mockUsers: User[] = [
     password: 'admin123'
   },
   {
+    id: 'manager1',
+    name: 'Department Manager',
+    email: 'manager@hrmanager.com',
+    role: 'manager',
+    department: 'Operations',
+    permissions: ['manage-team'],
+    password: 'manager123'
+  },
+  {
     id: 'emp1',
     name: 'John Employee',
     email: 'john@example.com',
     role: 'employee',
     department: 'Engineering',
+    permissions: ['view-own'],
+    password: 'password123'
+  },
+  {
+    id: 'emp2',
+    name: 'Sarah Smith',
+    email: 'sarah@example.com',
+    role: 'employee',
+    department: 'Marketing',
     permissions: ['view-own'],
     password: 'password123'
   }

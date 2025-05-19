@@ -16,14 +16,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to={`/login`} state={{ from: location }} replace />;
   }
 
-  // For employee portal access control
-  if (location.pathname === '/employee-portal' && user?.role === 'admin') {
-    return <Navigate to="/" replace />;
+  // For admin/manager dashboard access control
+  if (location.pathname !== '/employee-portal' && user?.role === 'employee') {
+    // Employees should only access employee portal
+    return <Navigate to="/employee-portal" replace />;
   }
 
-  // For admin dashboard access control
-  if (location.pathname !== '/employee-portal' && user?.role === 'employee') {
-    return <Navigate to="/employee-portal" replace />;
+  // For employee portal access control
+  if (location.pathname === '/employee-portal' && user?.role !== 'employee') {
+    // Admin/managers should access the main dashboard
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
