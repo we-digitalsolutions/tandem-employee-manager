@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Tabs, 
@@ -256,10 +255,10 @@ const EmployeePortal = () => {
                 <SelectItem value="full-day">Full Day (8 hours)</SelectItem>
                 <SelectItem value="half-day-morning">Half Day - Morning (4 hours)</SelectItem>
                 <SelectItem value="half-day-afternoon">Half Day - Afternoon (4 hours)</SelectItem>
-                <SelectItem value="quarter-day-1">Quarter Day - 8:00-10:00</SelectItem>
-                <SelectItem value="quarter-day-2">Quarter Day - 10:00-12:00</SelectItem>
-                <SelectItem value="quarter-day-3">Quarter Day - 13:00-15:00</SelectItem>
-                <SelectItem value="quarter-day-4">Quarter Day - 15:00-17:00</SelectItem>
+                <SelectItem value="quarter-day-1">1st Quarter Day (2 Hours)</SelectItem>
+                <SelectItem value="quarter-day-2">2nd Quarter Day (2 Hours)</SelectItem>
+                <SelectItem value="quarter-day-3">3rd Quarter Day (2 Hours)</SelectItem>
+                <SelectItem value="quarter-day-4">4th Quarter Day (2 Hours)</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage />
@@ -288,10 +287,10 @@ const EmployeePortal = () => {
                 <SelectItem value="full-day">Full Day (8 hours)</SelectItem>
                 <SelectItem value="half-day-morning">Half Day - Morning (4 hours)</SelectItem>
                 <SelectItem value="half-day-afternoon">Half Day - Afternoon (4 hours)</SelectItem>
-                <SelectItem value="quarter-day-1">Quarter Day - 8:00-10:00</SelectItem>
-                <SelectItem value="quarter-day-2">Quarter Day - 10:00-12:00</SelectItem>
-                <SelectItem value="quarter-day-3">Quarter Day - 13:00-15:00</SelectItem>
-                <SelectItem value="quarter-day-4">Quarter Day - 15:00-17:00</SelectItem>
+                <SelectItem value="quarter-day-1">1st Quarter Day (2 Hours)</SelectItem>
+                <SelectItem value="quarter-day-2">2nd Quarter Day (2 Hours)</SelectItem>
+                <SelectItem value="quarter-day-3">3rd Quarter Day (2 Hours)</SelectItem>
+                <SelectItem value="quarter-day-4">4th Quarter Day (2 Hours)</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage />

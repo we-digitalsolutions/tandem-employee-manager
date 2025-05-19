@@ -246,10 +246,10 @@ const RemoteRequestManagement = () => {
       case 'full-day': return "Full Day (8 hours)";
       case 'half-day-morning': return "Half Day - Morning (4 hours)";
       case 'half-day-afternoon': return "Half Day - Afternoon (4 hours)";
-      case 'quarter-day-1': return "Quarter Day - 8:00-10:00";
-      case 'quarter-day-2': return "Quarter Day - 10:00-12:00";
-      case 'quarter-day-3': return "Quarter Day - 13:00-15:00";
-      case 'quarter-day-4': return "Quarter Day - 15:00-17:00";
+      case 'quarter-day-1': return "1st Quarter Day (2 Hours)";
+      case 'quarter-day-2': return "2nd Quarter Day (2 Hours)";
+      case 'quarter-day-3': return "3rd Quarter Day (2 Hours)";
+      case 'quarter-day-4': return "4th Quarter Day (2 Hours)";
       default: return "Full Day";
     }
   };
@@ -342,10 +342,10 @@ const RemoteRequestManagement = () => {
                           <SelectItem value="full-day">Full Day (8 hours)</SelectItem>
                           <SelectItem value="half-day-morning">Half Day - Morning (4 hours)</SelectItem>
                           <SelectItem value="half-day-afternoon">Half Day - Afternoon (4 hours)</SelectItem>
-                          <SelectItem value="quarter-day-1">Quarter Day - 8:00-10:00</SelectItem>
-                          <SelectItem value="quarter-day-2">Quarter Day - 10:00-12:00</SelectItem>
-                          <SelectItem value="quarter-day-3">Quarter Day - 13:00-15:00</SelectItem>
-                          <SelectItem value="quarter-day-4">Quarter Day - 15:00-17:00</SelectItem>
+                          <SelectItem value="quarter-day-1">1st Quarter Day (2 Hours)</SelectItem>
+                          <SelectItem value="quarter-day-2">2nd Quarter Day (2 Hours)</SelectItem>
+                          <SelectItem value="quarter-day-3">3rd Quarter Day (2 Hours)</SelectItem>
+                          <SelectItem value="quarter-day-4">4th Quarter Day (2 Hours)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
