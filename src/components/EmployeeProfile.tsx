@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +29,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
 
+// Interface for the location data that we want to store separately
+interface EmployeeLocation {
+  city: string;
+  state: string;
+}
+
 const EmployeeProfile = ({ employeeId }: { employeeId?: string }) => {
   const params = useParams();
   const id = employeeId || params.id || '1';
@@ -50,6 +55,12 @@ const EmployeeProfile = ({ employeeId }: { employeeId?: string }) => {
   ]);
   
   const [editedEmployee, setEditedEmployee] = useState({ ...employee });
+  // Create a separate state for location info
+  const [location, setLocation] = useState<EmployeeLocation>({
+    city: "San Francisco",
+    state: "CA"
+  });
+  
   const [newDocument, setNewDocument] = useState({ name: '', type: 'PDF', file: null });
   const [newPerformance, setNewPerformance] = useState({
     title: '',
@@ -262,8 +273,14 @@ const EmployeeProfile = ({ employeeId }: { employeeId?: string }) => {
                       <label htmlFor="location" className="text-sm text-left block">Location</label>
                       <Input
                         id="location"
-                        defaultValue="San Francisco, CA"
-                        onChange={(e) => setEditedEmployee({...editedEmployee, location: e.target.value})}
+                        defaultValue={`${location.city}, ${location.state}`}
+                        onChange={(e) => {
+                          const parts = e.target.value.split(',');
+                          setLocation({
+                            city: parts[0] ? parts[0].trim() : location.city,
+                            state: parts[1] ? parts[1].trim() : location.state
+                          });
+                        }}
                       />
                     </div>
                   </>
@@ -283,7 +300,7 @@ const EmployeeProfile = ({ employeeId }: { employeeId?: string }) => {
                     </div>
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                      <span className="text-sm">San Francisco, CA</span>
+                      <span className="text-sm">{location.city}, {location.state}</span>
                     </div>
                   </>
                 )}
