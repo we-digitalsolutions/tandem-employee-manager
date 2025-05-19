@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -99,6 +99,7 @@ export function Layout({ children, activePage }: LayoutProps) {
 
 function AppSidebar({ activePage }: { activePage: string }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const isAdmin = user?.role === 'admin' || user?.role === 'manager';
   
   const navigation = [
@@ -119,6 +120,10 @@ function AppSidebar({ activePage }: { activePage: string }) {
     return item.showFor.includes(user.role);
   });
 
+  const handleNavigate = (href: string) => {
+    navigate(href);
+  };
+
   return (
     <Sidebar>
       <SidebarHeader className="p-4 border-b border-sidebar-border">
@@ -131,11 +136,12 @@ function AppSidebar({ activePage }: { activePage: string }) {
               <SidebarMenuButton
                 asChild
                 className={activePage === item.id ? 'bg-sidebar-accent' : ''}
+                onClick={() => handleNavigate(item.href)}
               >
-                <a href={item.href} className="flex items-center gap-4 px-3 py-2">
+                <button className="flex items-center gap-4 px-3 py-2 w-full text-left">
                   <item.icon size={20} />
                   <span>{item.name}</span>
-                </a>
+                </button>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
