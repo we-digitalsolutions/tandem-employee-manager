@@ -131,6 +131,7 @@ export const departmentsData: Department[] = [
     id: '1',
     name: 'Engineering',
     manager: 'John Doe',
+    managerId: '1',
     employeeCount: 24,
     budget: 1250000
   },
@@ -138,6 +139,7 @@ export const departmentsData: Department[] = [
     id: '2',
     name: 'Marketing',
     manager: 'Jane Smith',
+    managerId: '2',
     employeeCount: 12,
     budget: 750000
   },
@@ -145,6 +147,7 @@ export const departmentsData: Department[] = [
     id: '3',
     name: 'Finance',
     manager: 'Robert Johnson',
+    managerId: '3',
     employeeCount: 8,
     budget: 900000
   },
@@ -152,6 +155,7 @@ export const departmentsData: Department[] = [
     id: '4',
     name: 'Human Resources',
     manager: 'Emily Williams',
+    managerId: '4',
     employeeCount: 6,
     budget: 500000
   },
@@ -159,6 +163,7 @@ export const departmentsData: Department[] = [
     id: '5',
     name: 'Product',
     manager: 'Michael Brown',
+    managerId: '5',
     employeeCount: 10,
     budget: 1100000
   },
@@ -166,6 +171,7 @@ export const departmentsData: Department[] = [
     id: '6',
     name: 'Design',
     manager: 'Sarah Davis',
+    managerId: '6',
     employeeCount: 7,
     budget: 650000
   },
@@ -173,6 +179,7 @@ export const departmentsData: Department[] = [
     id: '7',
     name: 'Sales',
     manager: 'David Miller',
+    managerId: '7',
     employeeCount: 15,
     budget: 1300000
   },
@@ -180,6 +187,7 @@ export const departmentsData: Department[] = [
     id: '8',
     name: 'Customer Service',
     manager: 'Lisa Wilson',
+    managerId: '8',
     employeeCount: 18,
     budget: 800000
   }
