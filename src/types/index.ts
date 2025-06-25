@@ -154,6 +154,7 @@ export interface DocumentRequest {
   processedDate?: string;
   generatedDocumentUrl?: string;
   comments?: string;
+  additionalData?: Record<string, any>;
 }
 
 export interface AttendanceRecord {
