@@ -1,4 +1,3 @@
-
 export interface Employee {
   id: string;
   firstName: string;
@@ -235,4 +234,16 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+}
+
+export interface DocumentTemplate {
+  id: string;
+  name: string;
+  type: 'payslip' | 'work-certificate' | 'salary-certificate' | 'mission-order' | 'custom';
+  description: string;
+  templateUrl: string;
+  variables: string[];
+  createdBy: string;
+  createdDate: string;
+  isActive: boolean;
 }
