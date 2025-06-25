@@ -13,12 +13,16 @@ export interface Employee {
   jobDescription?: string;
   password?: string;  // For demo purposes only
   role?: 'admin' | 'manager' | 'employee';
+  managerId?: string;
+  leaveBalances?: LeaveBalance[];
+  documents?: EmployeeDocument[];
 }
 
 export interface Department {
   id: string;
   name: string;
   manager: string;
+  managerId: string;
   employeeCount: number;
   budget: number;
 }
@@ -45,7 +49,9 @@ export interface DashboardStat {
   changeType?: 'increase' | 'decrease';
 }
 
-export type RequestStatus = 'pending' | 'approved' | 'declined';
+export type RequestStatus = 'pending' | 'manager-approved' | 'hr-approved' | 'approved' | 'declined';
+
+export type ApprovalStep = 'manager' | 'hr';
 
 export type TimeDuration = 'full-day' | 'half-day-morning' | 'half-day-afternoon' | 'quarter-day-1' | 'quarter-day-2' | 'quarter-day-3' | 'quarter-day-4';
 
@@ -63,6 +69,11 @@ export interface LeaveRequest {
   reviewDate?: string;
   comments?: string;
   duration?: TimeDuration;
+  attachments?: FileAttachment[];
+  calculatedDays?: number;
+  managerApproval?: ApprovalRecord;
+  hrApproval?: ApprovalRecord;
+  currentApprovalStep?: ApprovalStep;
 }
 
 export interface RemoteRequest {
@@ -79,6 +90,106 @@ export interface RemoteRequest {
   comments?: string;
   location?: string;
   duration?: TimeDuration;
+  attachments?: FileAttachment[];
+  calculatedDays?: number;
+  managerApproval?: ApprovalRecord;
+  hrApproval?: ApprovalRecord;
+  currentApprovalStep?: ApprovalStep;
+}
+
+export interface FileAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+  uploadedDate: string;
+}
+
+export interface ApprovalRecord {
+  approverId: string;
+  approverName: string;
+  approverRole: string;
+  decision: 'approved' | 'declined';
+  comments?: string;
+  date: string;
+}
+
+export interface LeaveBalance {
+  type: 'vacation' | 'sick' | 'personal' | 'maternity' | 'paternity' | 'bereavement';
+  allocated: number;
+  used: number;
+  remaining: number;
+  year: number;
+}
+
+export interface Holiday {
+  id: string;
+  name: string;
+  date: string;
+  type: 'national' | 'company' | 'religious';
+  recurring: boolean;
+}
+
+export interface EmployeeDocument {
+  id: string;
+  name: string;
+  category: 'cv' | 'contract' | 'diploma' | 'id-card' | 'passport' | 'certification' | 'other';
+  type: string;
+  size: number;
+  url: string;
+  uploadedBy: string;
+  uploadedDate: string;
+  expiryDate?: string;
+}
+
+export interface DocumentRequest {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  documentType: 'payslip' | 'work-certificate' | 'salary-certificate' | 'mission-order' | 'custom';
+  customDescription?: string;
+  status: 'pending' | 'processing' | 'completed' | 'declined';
+  submittedDate: string;
+  processedBy?: string;
+  processedDate?: string;
+  generatedDocumentUrl?: string;
+  comments?: string;
+}
+
+export interface AttendanceRecord {
+  id: string;
+  employeeId: string;
+  date: string;
+  clockIn?: string;
+  clockOut?: string;
+  totalHours?: number;
+  status: 'present' | 'absent' | 'late' | 'half-day' | 'remote';
+  location?: string;
+  notes?: string;
+}
+
+export interface PerformanceReview {
+  id: string;
+  employeeId: string;
+  reviewerId: string;
+  period: string;
+  goals: Goal[];
+  overallRating: number;
+  comments: string;
+  status: 'draft' | 'submitted' | 'completed';
+  createdDate: string;
+  completedDate?: string;
+}
+
+export interface Goal {
+  id: string;
+  title: string;
+  description: string;
+  targetDate: string;
+  status: 'not-started' | 'in-progress' | 'completed';
+  rating?: number;
+  comments?: string;
 }
 
 export interface Notification {
@@ -88,6 +199,8 @@ export interface Notification {
   date: string;
   read: boolean;
   link?: string;
+  recipientId: string;
+  senderId?: string;
 }
 
 export interface User {
