@@ -29,12 +29,24 @@ import {
   CalendarCheck,
   CalendarX,
   Clock,
-  Mail
+  Mail,
+  Upload,
+  AlertTriangle
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { sendStatusUpdateEmail } from '@/utils/emailService';
+import FileUpload from './FileUpload';
+import ApprovalWorkflow from './ApprovalWorkflow';
+import { Badge } from '@/components/ui/badge';
+
+// Mock leave balances
+const mockLeaveBalances = {
+  vacation: { allocated: 25, used: 10, remaining: 15 },
+  sick: { allocated: 12, used: 3, remaining: 9 },
+  personal: { allocated: 5, used: 2, remaining: 3 }
+};
 
 // Mock data for leave requests
 const mockLeaveRequests: LeaveRequest[] = [
@@ -49,6 +61,8 @@ const mockLeaveRequests: LeaveRequest[] = [
     status: 'pending',
     submittedDate: '2025-05-15',
     duration: 'full-day',
+    calculatedDays: 5,
+    currentApprovalStep: 'manager'
   },
   {
     id: '2',
@@ -58,41 +72,22 @@ const mockLeaveRequests: LeaveRequest[] = [
     endDate: '2025-05-21',
     type: 'sick',
     reason: 'Medical appointment',
-    status: 'approved',
+    status: 'manager-approved',
     submittedDate: '2025-05-10',
     reviewedBy: 'Michael Brown',
     reviewDate: '2025-05-12',
     duration: 'half-day-morning',
-  },
-  {
-    id: '3',
-    employeeId: '103',
-    employeeName: 'Emily Davis',
-    startDate: '2025-06-15',
-    endDate: '2025-06-30',
-    type: 'maternity',
-    reason: 'Maternity leave',
-    status: 'approved',
-    submittedDate: '2025-04-30',
-    reviewedBy: 'Michael Brown',
-    reviewDate: '2025-05-02',
-    duration: 'full-day',
-  },
-  {
-    id: '4',
-    employeeId: '104',
-    employeeName: 'David Wilson',
-    startDate: '2025-05-25',
-    endDate: '2025-05-25',
-    type: 'personal',
-    reason: 'Personal matters',
-    status: 'declined',
-    submittedDate: '2025-05-18',
-    reviewedBy: 'Michael Brown',
-    reviewDate: '2025-05-19',
-    comments: 'Critical project deadline on this date',
-    duration: 'quarter-day-3',
-  },
+    calculatedDays: 1,
+    currentApprovalStep: 'hr',
+    managerApproval: {
+      approverId: 'mgr1',
+      approverName: 'Michael Brown',
+      approverRole: 'Department Manager',
+      decision: 'approved',
+      date: '2025-05-12',
+      comments: 'Approved for medical reasons'
+    }
+  }
 ];
 
 interface NewLeaveRequestFormData {
@@ -113,6 +108,7 @@ const LeaveRequestManagement = () => {
   const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState<string>("");
   const [declineComment, setDeclineComment] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
 
   const form = useForm<NewLeaveRequestFormData>({
     defaultValues: {
@@ -128,27 +124,83 @@ const LeaveRequestManagement = () => {
 
   // Mock function to get employee email (in a real app, this would come from a database)
   const getEmployeeEmail = (employeeId: string): string => {
-    // This is a mock function returning fake emails
     return `${employeeId}@company.com`;
   };
 
-  const handleApprove = (id: string) => {
+  const calculateLeaveDays = (startDate: string, endDate: string, duration: string) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
+    // Adjust based on duration type
+    switch (duration) {
+      case 'half-day-morning':
+      case 'half-day-afternoon':
+        return diffDays * 0.5;
+      case 'quarter-day-1':
+      case 'quarter-day-2':
+      case 'quarter-day-3':
+      case 'quarter-day-4':
+        return diffDays * 0.25;
+      default:
+        return diffDays;
+    }
+  };
+
+  const checkLeaveBalance = (type: string, requestedDays: number) => {
+    const balance = mockLeaveBalances[type as keyof typeof mockLeaveBalances];
+    if (!balance) return { isValid: true, message: '' };
+    
+    if (requestedDays > balance.remaining) {
+      return {
+        isValid: false,
+        message: `Insufficient leave balance. Requested: ${requestedDays} days, Available: ${balance.remaining} days`
+      };
+    }
+    return { isValid: true, message: '' };
+  };
+
+  const handleApprove = (id: string, step: 'manager' | 'hr' = 'manager') => {
     const request = requests.find(req => req.id === id);
     if (!request) return;
     
-    const updatedRequests = requests.map(req => 
-      req.id === id 
-        ? { 
-            ...req, 
-            status: 'approved' as RequestStatus, 
-            reviewDate: new Date().toISOString().split('T')[0], 
-            reviewedBy: 'Current User' 
-          } 
-        : req
-    );
+    const updatedRequests = requests.map(req => {
+      if (req.id === id) {
+        if (step === 'manager') {
+          return {
+            ...req,
+            status: 'manager-approved' as RequestStatus,
+            currentApprovalStep: 'hr' as const,
+            managerApproval: {
+              approverId: 'current-user',
+              approverName: 'Current User',
+              approverRole: 'Department Manager',
+              decision: 'approved' as const,
+              date: new Date().toISOString().split('T')[0],
+              comments: 'Approved by manager'
+            }
+          };
+        } else {
+          return {
+            ...req,
+            status: 'approved' as RequestStatus,
+            hrApproval: {
+              approverId: 'current-hr',
+              approverName: 'HR Manager',
+              approverRole: 'HR Manager',
+              decision: 'approved' as const,
+              date: new Date().toISOString().split('T')[0],
+              comments: 'Final approval by HR'
+            }
+          };
+        }
+      }
+      return req;
+    });
     
     setRequests(updatedRequests);
-    toast.success('Leave request approved');
+    toast.success(`Leave request ${step === 'manager' ? 'approved by manager' : 'fully approved'}`);
     
     // Send email notification
     sendStatusUpdateEmail(
@@ -156,7 +208,7 @@ const LeaveRequestManagement = () => {
       getEmployeeEmail(request.employeeId),
       'leave',
       request.id,
-      'approved',
+      step === 'manager' ? 'manager-approved' : 'approved',
       { startDate: request.startDate, endDate: request.endDate }
     );
   };
@@ -207,7 +259,20 @@ const LeaveRequestManagement = () => {
     setIsViewDialogOpen(true);
   };
 
+  const handleFileUpload = (files: any[]) => {
+    setUploadedFiles(files);
+    toast.success(`${files.length} file(s) uploaded as justification`);
+  };
+
   const onSubmit = (data: NewLeaveRequestFormData) => {
+    const calculatedDays = calculateLeaveDays(data.startDate, data.endDate, data.duration);
+    const balanceCheck = checkLeaveBalance(data.type, calculatedDays);
+    
+    if (!balanceCheck.isValid) {
+      toast.error(balanceCheck.message);
+      return;
+    }
+
     const newRequest: LeaveRequest = {
       id: `${Date.now()}`,
       employeeId: data.employeeId,
@@ -219,23 +284,36 @@ const LeaveRequestManagement = () => {
       status: 'pending',
       submittedDate: new Date().toISOString().split('T')[0],
       duration: data.duration,
+      calculatedDays,
+      currentApprovalStep: 'manager',
+      attachments: uploadedFiles.length > 0 ? uploadedFiles.map(file => ({
+        id: `${Date.now()}-${Math.random()}`,
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        url: file.url,
+        uploadedDate: new Date().toISOString().split('T')[0]
+      })) : undefined
     };
     
     setRequests([...requests, newRequest]);
     setIsCreateDialogOpen(false);
+    setUploadedFiles([]);
     form.reset();
-    toast.success('New leave request created');
+    toast.success('New leave request created and sent for approval');
   };
 
   const getStatusBadgeClass = (status: string) => {
     if (status === 'approved') return 'bg-green-100 text-green-800';
     if (status === 'declined') return 'bg-red-100 text-red-800';
+    if (status === 'manager-approved') return 'bg-blue-100 text-blue-800';
     return 'bg-yellow-100 text-yellow-800';
   };
 
   const getStatusIcon = (status: string) => {
     if (status === 'approved') return <CalendarCheck className="h-4 w-4 mr-1 text-green-600" />;
     if (status === 'declined') return <CalendarX className="h-4 w-4 mr-1 text-red-600" />;
+    if (status === 'manager-approved') return <CheckCircle className="h-4 w-4 mr-1 text-blue-600" />;
     return <Calendar className="h-4 w-4 mr-1 text-yellow-600" />;
   };
 
@@ -265,7 +343,7 @@ const LeaveRequestManagement = () => {
               New Leave Request
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Create Leave Request</DialogTitle>
             </DialogHeader>
@@ -389,6 +467,39 @@ const LeaveRequestManagement = () => {
                     </FormItem>
                   )}
                 />
+                
+                {/* File Upload Section */}
+                <div>
+                  <FormLabel>Supporting Documents (Optional)</FormLabel>
+                  <div className="mt-2">
+                    <FileUpload
+                      onFilesUploaded={handleFileUpload}
+                      maxFiles={3}
+                      acceptedTypes={['image/*', 'application/pdf', '.doc', '.docx']}
+                    />
+                  </div>
+                  {uploadedFiles.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-green-600">
+                        {uploadedFiles.length} file(s) attached
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Leave Balance Check */}
+                {form.watch('type') && (
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <h4 className="font-medium text-blue-800 mb-2">Leave Balance</h4>
+                    {Object.entries(mockLeaveBalances).map(([type, balance]) => (
+                      <div key={type} className="flex justify-between text-sm">
+                        <span className="capitalize">{type}:</span>
+                        <span>{balance.remaining}/{balance.allocated} days remaining</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <DialogFooter className="pt-4">
                   <Button type="submit">Submit Request</Button>
                 </DialogFooter>
@@ -406,6 +517,7 @@ const LeaveRequestManagement = () => {
               <TableHead>Type</TableHead>
               <TableHead>Dates</TableHead>
               <TableHead>Duration</TableHead>
+              <TableHead>Days</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Submitted</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -424,9 +536,14 @@ const LeaveRequestManagement = () => {
                   </div>
                 </TableCell>
                 <TableCell>
+                  <Badge variant="outline">
+                    {request.calculatedDays || 'N/A'} days
+                  </Badge>
+                </TableCell>
+                <TableCell>
                   <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(request.status)}`}>
                     {getStatusIcon(request.status)}
-                    {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                    {request.status === 'manager-approved' ? 'Pending HR' : request.status.charAt(0).toUpperCase() + request.status.slice(1)}
                   </div>
                 </TableCell>
                 <TableCell>{request.submittedDate}</TableCell>
@@ -438,12 +555,12 @@ const LeaveRequestManagement = () => {
                   >
                     <Eye size={16} />
                   </Button>
-                  {request.status === 'pending' && (
+                  {request.status === 'pending' && request.currentApprovalStep === 'manager' && (
                     <>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        onClick={() => handleApprove(request.id)}
+                        onClick={() => handleApprove(request.id, 'manager')}
                       >
                         <CheckCircle size={16} className="text-green-600" />
                       </Button>
@@ -456,7 +573,25 @@ const LeaveRequestManagement = () => {
                       </Button>
                     </>
                   )}
-                  {request.status !== 'pending' && (
+                  {request.status === 'manager-approved' && request.currentApprovalStep === 'hr' && (
+                    <>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleApprove(request.id, 'hr')}
+                      >
+                        <CheckCircle size={16} className="text-blue-600" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => openDeclineDialog(request.id)}
+                      >
+                        <XCircle size={16} className="text-red-600" />
+                      </Button>
+                    </>
+                  )}
+                  {(request.status === 'approved' || request.status === 'declined') && (
                     <Button
                       variant="ghost"
                       size="sm"
@@ -485,7 +620,7 @@ const LeaveRequestManagement = () => {
       </div>
 
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Leave Request Details</DialogTitle>
           </DialogHeader>
@@ -513,11 +648,19 @@ const LeaveRequestManagement = () => {
                 </div>
               </div>
               
-              <div>
-                <p className="text-sm font-medium text-gray-500">Duration</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <Clock className="h-4 w-4 text-gray-500" />
-                  <span>{getDurationLabel(viewRequest.duration)}</span>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Duration</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Clock className="h-4 w-4 text-gray-500" />
+                    <span>{getDurationLabel(viewRequest.duration)}</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Calculated Days</p>
+                  <Badge variant="outline" className="mt-1">
+                    {viewRequest.calculatedDays || 'N/A'} days
+                  </Badge>
                 </div>
               </div>
               
@@ -531,12 +674,29 @@ const LeaveRequestManagement = () => {
                 <p>{viewRequest.reason}</p>
               </div>
               
+              {viewRequest.attachments && viewRequest.attachments.length > 0 && (
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-2">Supporting Documents</p>
+                  <div className="space-y-2">
+                    {viewRequest.attachments.map((file) => (
+                      <div key={file.id} className="flex items-center gap-2 p-2 border rounded">
+                        <Upload className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm">{file.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {(file.size / 1024).toFixed(1)} KB
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Status</p>
                   <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(viewRequest.status)}`}>
                     {getStatusIcon(viewRequest.status)}
-                    {viewRequest.status.charAt(0).toUpperCase() + viewRequest.status.slice(1)}
+                    {viewRequest.status === 'manager-approved' ? 'Pending HR' : viewRequest.status.charAt(0).toUpperCase() + viewRequest.status.slice(1)}
                   </div>
                 </div>
                 <div>
@@ -545,16 +705,14 @@ const LeaveRequestManagement = () => {
                 </div>
               </div>
               
-              {viewRequest.reviewedBy && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Reviewed By</p>
-                    <p>{viewRequest.reviewedBy}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Review Date</p>
-                    <p>{viewRequest.reviewDate}</p>
-                  </div>
+              {(viewRequest.managerApproval || viewRequest.hrApproval) && (
+                <div>
+                  <ApprovalWorkflow
+                    status={viewRequest.status}
+                    managerApproval={viewRequest.managerApproval}
+                    hrApproval={viewRequest.hrApproval}
+                    currentStep={viewRequest.currentApprovalStep}
+                  />
                 </div>
               )}
               

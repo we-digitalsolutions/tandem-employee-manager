@@ -12,6 +12,7 @@ import Reports from '@/components/Reports';
 import Settings from '@/components/Settings';
 import EmployeePortal from '@/components/EmployeePortal';
 import UserManagement from '@/components/UserManagement';
+import FeatureVerificationDashboard from '@/components/FeatureVerificationDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
@@ -45,6 +46,7 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
           <TabsTrigger value="user-management">User Management</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
           <TabsTrigger value="employee-portal">Employee Portal</TabsTrigger>
+          <TabsTrigger value="feature-verification">Feature Test</TabsTrigger>
         </TabsList>
         
         <TabsContent value="dashboard" className="mt-0">
@@ -81,6 +83,10 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
         
         <TabsContent value="employee-portal" className="mt-0">
           <EmployeePortal />
+        </TabsContent>
+        
+        <TabsContent value="feature-verification" className="mt-0">
+          <FeatureVerificationDashboard />
         </TabsContent>
       </Tabs>
     </Layout>
