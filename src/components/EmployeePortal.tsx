@@ -1,9 +1,8 @@
-
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { AuthContext } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { 
   Calendar, 
   MapPin, 
@@ -21,7 +20,7 @@ import PerformanceManagement from './PerformanceManagement';
 import OnboardingWorkflow from './OnboardingWorkflow';
 
 const EmployeePortal = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!user) {

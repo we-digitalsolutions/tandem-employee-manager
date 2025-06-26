@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Card, 
@@ -16,12 +15,15 @@ import { ChartContainer } from '@/components/ui/chart';
 import * as RechartsPrimitive from "recharts";
 import { ChartTooltipContent } from '@/components/ui/chart';
 import { Button } from '@/components/ui/button';
-import { Download, BarChart, CalendarCheck, FileText } from 'lucide-react';
+import { Download, BarChart, CalendarCheck, FileText, TrendingUp, Smartphone, Globe } from 'lucide-react';
+import AdvancedReporting from './AdvancedReporting';
+import MobileOptimization from './MobileOptimization';
+import ExternalIntegrations from './ExternalIntegrations';
 
 const Reports = () => {
-  const [reportType, setReportType] = useState('attendance');
+  const [reportType, setReportType] = useState('basic');
 
-  // Mock data for reports
+  // Mock data for basic reports
   const attendanceData = [
     { month: 'Jan', present: 92, absent: 8, leave: 0 },
     { month: 'Feb', present: 89, absent: 5, leave: 6 },
@@ -54,8 +56,8 @@ const Reports = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-          <p className="text-gray-600">Generate and view reports on employee data</p>
+          <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+          <p className="text-gray-600">Comprehensive reporting and advanced analytics</p>
         </div>
         <Button variant="outline" className="flex items-center gap-2">
           <Download size={16} />
@@ -63,113 +65,148 @@ const Reports = () => {
         </Button>
       </div>
 
-      <Tabs defaultValue="attendance" onValueChange={setReportType}>
+      <Tabs defaultValue="basic" onValueChange={setReportType}>
         <TabsList className="mb-6">
-          <TabsTrigger value="attendance" className="flex items-center gap-2">
-            <CalendarCheck size={16} />
-            Attendance
-          </TabsTrigger>
-          <TabsTrigger value="productivity" className="flex items-center gap-2">
+          <TabsTrigger value="basic" className="flex items-center gap-2">
             <BarChart size={16} />
-            Productivity
+            Basic Reports
           </TabsTrigger>
-          <TabsTrigger value="leave" className="flex items-center gap-2">
-            <FileText size={16} />
-            Leave Distribution
+          <TabsTrigger value="advanced" className="flex items-center gap-2">
+            <TrendingUp size={16} />
+            Advanced Analytics
+          </TabsTrigger>
+          <TabsTrigger value="mobile" className="flex items-center gap-2">
+            <Smartphone size={16} />
+            Mobile Experience
+          </TabsTrigger>
+          <TabsTrigger value="integrations" className="flex items-center gap-2">
+            <Globe size={16} />
+            Integrations
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="attendance" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Monthly Attendance Report</CardTitle>
-            </CardHeader>
-            <CardContent className="h-80">
-              <ChartContainer
-                config={{
-                  present: { color: "#38b2ac" },
-                  absent: { color: "#f56565" },
-                  leave: { color: "#ecc94b" }
-                }}
-              >
-                <RechartsPrimitive.BarChart
-                  data={attendanceData}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                  <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
-                  <RechartsPrimitive.XAxis dataKey="month" />
-                  <RechartsPrimitive.YAxis />
-                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                  <RechartsPrimitive.Legend />
-                  <RechartsPrimitive.Bar dataKey="present" stackId="a" fill="#38b2ac" name="Present" />
-                  <RechartsPrimitive.Bar dataKey="absent" stackId="a" fill="#f56565" name="Absent" />
-                  <RechartsPrimitive.Bar dataKey="leave" stackId="a" fill="#ecc94b" name="Leave" />
-                </RechartsPrimitive.BarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <TabsContent value="basic" className="space-y-6">
+          <Tabs defaultValue="attendance">
+            <TabsList className="mb-4">
+              <TabsTrigger value="attendance" className="flex items-center gap-2">
+                <CalendarCheck size={16} />
+                Attendance
+              </TabsTrigger>
+              <TabsTrigger value="productivity" className="flex items-center gap-2">
+                <BarChart size={16} />
+                Productivity
+              </TabsTrigger>
+              <TabsTrigger value="leave" className="flex items-center gap-2">
+                <FileText size={16} />
+                Leave Distribution
+              </TabsTrigger>
+            </TabsList>
 
-        <TabsContent value="productivity" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Department Productivity</CardTitle>
-            </CardHeader>
-            <CardContent className="h-80">
-              <ChartContainer
-                config={{
-                  productivity: { color: "#805ad5" }
-                }}
-              >
-                <RechartsPrimitive.BarChart
-                  data={departmentProductivityData}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                  <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
-                  <RechartsPrimitive.XAxis dataKey="department" />
-                  <RechartsPrimitive.YAxis />
-                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                  <RechartsPrimitive.Bar dataKey="productivity" fill="#805ad5" />
-                </RechartsPrimitive.BarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="leave" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Leave Distribution by Type</CardTitle>
-            </CardHeader>
-            <CardContent className="h-80">
-              <ChartContainer
-                config={{
-                  value: { color: "#4c51bf" }
-                }}
-              >
-                <RechartsPrimitive.PieChart>
-                  <RechartsPrimitive.Pie
-                    data={leaveDistributionData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            <TabsContent value="attendance">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Monthly Attendance Report</CardTitle>
+                </CardHeader>
+                <CardContent className="h-80">
+                  <ChartContainer
+                    config={{
+                      present: { color: "#38b2ac" },
+                      absent: { color: "#f56565" },
+                      leave: { color: "#ecc94b" }
+                    }}
                   >
-                    {leaveDistributionData.map((entry, index) => (
-                      <RechartsPrimitive.Cell 
-                        key={`cell-${index}`} 
-                        fill={['#4c51bf', '#38b2ac', '#f56565', '#ecc94b', '#ed64a6', '#9f7aea'][index % 6]} 
-                      />
-                    ))}
-                  </RechartsPrimitive.Pie>
-                  <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
-                  <RechartsPrimitive.Legend />
-                </RechartsPrimitive.PieChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
+                    <RechartsPrimitive.BarChart
+                      data={attendanceData}
+                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                    >
+                      <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                      <RechartsPrimitive.XAxis dataKey="month" />
+                      <RechartsPrimitive.YAxis />
+                      <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                      <RechartsPrimitive.Legend />
+                      <RechartsPrimitive.Bar dataKey="present" stackId="a" fill="#38b2ac" name="Present" />
+                      <RechartsPrimitive.Bar dataKey="absent" stackId="a" fill="#f56565" name="Absent" />
+                      <RechartsPrimitive.Bar dataKey="leave" stackId="a" fill="#ecc94b" name="Leave" />
+                    </RechartsPrimitive.BarChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="productivity">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Department Productivity</CardTitle>
+                </CardHeader>
+                <CardContent className="h-80">
+                  <ChartContainer
+                    config={{
+                      productivity: { color: "#805ad5" }
+                    }}
+                  >
+                    <RechartsPrimitive.BarChart
+                      data={departmentProductivityData}
+                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                    >
+                      <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                      <RechartsPrimitive.XAxis dataKey="department" />
+                      <RechartsPrimitive.YAxis />
+                      <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                      <RechartsPrimitive.Bar dataKey="productivity" fill="#805ad5" />
+                    </RechartsPrimitive.BarChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="leave">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Leave Distribution by Type</CardTitle>
+                </CardHeader>
+                <CardContent className="h-80">
+                  <ChartContainer
+                    config={{
+                      value: { color: "#4c51bf" }
+                    }}
+                  >
+                    <RechartsPrimitive.PieChart>
+                      <RechartsPrimitive.Pie
+                        data={leaveDistributionData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {leaveDistributionData.map((entry, index) => (
+                          <RechartsPrimitive.Cell 
+                            key={`cell-${index}`} 
+                            fill={['#4c51bf', '#38b2ac', '#f56565', '#ecc94b', '#ed64a6', '#9f7aea'][index % 6]} 
+                          />
+                        ))}
+                      </RechartsPrimitive.Pie>
+                      <RechartsPrimitive.Tooltip content={<ChartTooltipContent />} />
+                      <RechartsPrimitive.Legend />
+                    </RechartsPrimitive.PieChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="advanced">
+          <AdvancedReporting />
+        </TabsContent>
+
+        <TabsContent value="mobile">
+          <MobileOptimization />
+        </TabsContent>
+
+        <TabsContent value="integrations">
+          <ExternalIntegrations />
         </TabsContent>
       </Tabs>
     </div>
