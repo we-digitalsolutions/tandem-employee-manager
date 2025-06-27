@@ -40,6 +40,7 @@ import { sendStatusUpdateEmail } from '@/utils/emailService';
 import FileUpload from './FileUpload';
 import ApprovalWorkflow from './ApprovalWorkflow';
 import { Badge } from '@/components/ui/badge';
+import { calculateLeaveDays } from '@/utils/dateCalculations';
 
 // Mock leave balances
 const mockLeaveBalances = {
@@ -127,25 +128,8 @@ const LeaveRequestManagement = () => {
     return `${employeeId}@company.com`;
   };
 
-  const calculateLeaveDays = (startDate: string, endDate: string, duration: string) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    
-    // Adjust based on duration type
-    switch (duration) {
-      case 'half-day-morning':
-      case 'half-day-afternoon':
-        return diffDays * 0.5;
-      case 'quarter-day-1':
-      case 'quarter-day-2':
-      case 'quarter-day-3':
-      case 'quarter-day-4':
-        return diffDays * 0.25;
-      default:
-        return diffDays;
-    }
+  const calculateLeaveDaysWrapper = (startDate: string, endDate: string, duration: string) => {
+    return calculateLeaveDays(startDate, endDate, duration);
   };
 
   const checkLeaveBalance = (type: string, requestedDays: number) => {
@@ -265,7 +249,7 @@ const LeaveRequestManagement = () => {
   };
 
   const onSubmit = (data: NewLeaveRequestFormData) => {
-    const calculatedDays = calculateLeaveDays(data.startDate, data.endDate, data.duration);
+    const calculatedDays = calculateLeaveDaysWrapper(data.startDate, data.endDate, data.duration);
     const balanceCheck = checkLeaveBalance(data.type, calculatedDays);
     
     if (!balanceCheck.isValid) {

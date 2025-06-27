@@ -1,101 +1,137 @@
 
 import { Holiday } from '@/types';
 
-// Mock holidays data
-export const holidays: Holiday[] = [
-  {
-    id: '1',
-    name: 'New Year\'s Day',
-    date: '2025-01-01',
-    type: 'national',
-    recurring: true
-  },
-  {
-    id: '2',
-    name: 'Labor Day',
-    date: '2025-05-01',
-    type: 'national',
-    recurring: true
-  },
-  {
-    id: '3',
-    name: 'Independence Day',
-    date: '2025-07-04',
-    type: 'national',
-    recurring: true
-  },
-  {
-    id: '4',
-    name: 'Christmas Day',
-    date: '2025-12-25',
-    type: 'national',
-    recurring: true
-  },
-  {
-    id: '5',
-    name: 'Company Founding Day',
-    date: '2025-03-15',
-    type: 'company',
-    recurring: true
-  }
+// Mock holidays data - in real app, this would come from the HolidayCalendar component
+const defaultHolidays: Holiday[] = [
+  { id: '1', name: 'New Year\'s Day', date: '2025-01-01', type: 'national', recurring: true },
+  { id: '2', name: 'Independence Day', date: '2025-03-20', type: 'national', recurring: true },
+  { id: '3', name: 'Labor Day', date: '2025-05-01', type: 'national', recurring: true },
+  { id: '4', name: 'Company Foundation Day', date: '2025-06-15', type: 'company', recurring: true },
 ];
 
-export const isWeekend = (date: Date): boolean => {
-  const day = date.getDay();
-  return day === 0; // Sunday only
-};
-
-export const isHoliday = (date: Date, holidayList: Holiday[] = holidays): boolean => {
-  const dateString = date.toISOString().split('T')[0];
-  return holidayList.some(holiday => holiday.date === dateString);
-};
-
-export const isWorkingDay = (date: Date, holidayList: Holiday[] = holidays): boolean => {
-  return !isWeekend(date) && !isHoliday(date, holidayList);
-};
-
-export const calculateWorkingDays = (
+export const calculateBusinessDays = (
   startDate: string, 
   endDate: string, 
-  holidayList: Holiday[] = holidays
+  holidays: Holiday[] = defaultHolidays
 ): number => {
   const start = new Date(startDate);
   const end = new Date(endDate);
   
-  let workingDays = 0;
-  const currentDate = new Date(start);
-  
-  while (currentDate <= end) {
-    if (isWorkingDay(currentDate, holidayList)) {
-      workingDays++;
+  if (start > end) {
+    return 0;
+  }
+
+  let businessDays = 0;
+  const current = new Date(start);
+
+  // Get holiday dates for the year
+  const holidayDates = getHolidayDatesForYear(new Date().getFullYear(), holidays);
+
+  while (current <= end) {
+    const dayOfWeek = current.getDay();
+    const currentDateString = current.toISOString().split('T')[0];
+    
+    // Skip Sundays (0) and holidays
+    if (dayOfWeek !== 0 && !holidayDates.includes(currentDateString)) {
+      businessDays++;
     }
-    currentDate.setDate(currentDate.getDate() + 1);
+    
+    current.setDate(current.getDate() + 1);
   }
-  
-  return workingDays;
+
+  return businessDays;
 };
 
-export const getNextWorkingDay = (date: Date, holidayList: Holiday[] = holidays): Date => {
-  const nextDay = new Date(date);
-  nextDay.setDate(nextDay.getDate() + 1);
+export const calculateLeaveDays = (
+  startDate: string,
+  endDate: string,
+  durationType: string,
+  holidays: Holiday[] = defaultHolidays
+): number => {
+  const businessDays = calculateBusinessDays(startDate, endDate, holidays);
   
-  while (!isWorkingDay(nextDay, holidayList)) {
-    nextDay.setDate(nextDay.getDate() + 1);
+  // Apply duration multiplier
+  switch (durationType) {
+    case 'half-day-morning':
+    case 'half-day-afternoon':
+      return businessDays * 0.5;
+    case 'quarter-day-1':
+    case 'quarter-day-2':
+    case 'quarter-day-3':
+    case 'quarter-day-4':
+      return businessDays * 0.25;
+    case 'full-day':
+    default:
+      return businessDays;
   }
-  
-  return nextDay;
 };
 
-export const getHolidaysBetweenDates = (
-  startDate: string, 
-  endDate: string, 
-  holidayList: Holiday[] = holidays
-): Holiday[] => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+const getHolidayDatesForYear = (year: number, holidays: Holiday[]): string[] => {
+  return holidays
+    .filter(holiday => {
+      if (holiday.recurring) {
+        return true; // Include all recurring holidays
+      } else {
+        const holidayYear = new Date(holiday.date).getFullYear();
+        return holidayYear === year;
+      }
+    })
+    .map(holiday => {
+      if (holiday.recurring) {
+        // For recurring holidays, use the current year
+        const holidayDate = new Date(holiday.date);
+        holidayDate.setFullYear(year);
+        return holidayDate.toISOString().split('T')[0];
+      }
+      return holiday.date;
+    });
+};
+
+export const isWorkingDay = (date: string, holidays: Holiday[] = defaultHolidays): boolean => {
+  const dateObj = new Date(date);
+  const dayOfWeek = dateObj.getDay();
   
-  return holidayList.filter(holiday => {
-    const holidayDate = new Date(holiday.date);
-    return holidayDate >= start && holidayDate <= end;
-  });
+  // Check if it's Sunday
+  if (dayOfWeek === 0) {
+    return false;
+  }
+  
+  // Check if it's a holiday
+  const year = dateObj.getFullYear();
+  const holidayDates = getHolidayDatesForYear(year, holidays);
+  
+  return !holidayDates.includes(date);
+};
+
+export const getNextWorkingDay = (date: string, holidays: Holiday[] = defaultHolidays): string => {
+  const current = new Date(date);
+  
+  do {
+    current.setDate(current.getDate() + 1);
+  } while (!isWorkingDay(current.toISOString().split('T')[0], holidays));
+  
+  return current.toISOString().split('T')[0];
+};
+
+export const getPreviousWorkingDay = (date: string, holidays: Holiday[] = defaultHolidays): string => {
+  const current = new Date(date);
+  
+  do {
+    current.setDate(current.getDate() - 1);
+  } while (!isWorkingDay(current.toISOString().split('T')[0], holidays));
+  
+  return current.toISOString().split('T')[0];
+};
+
+export const formatDuration = (durationType: string): string => {
+  switch (durationType) {
+    case 'full-day': return 'Full Day (8 hours)';
+    case 'half-day-morning': return 'Half Day - Morning (4 hours)';
+    case 'half-day-afternoon': return 'Half Day - Afternoon (4 hours)';
+    case 'quarter-day-1': return '1st Quarter Day (2 hours)';
+    case 'quarter-day-2': return '2nd Quarter Day (2 hours)';
+    case 'quarter-day-3': return '3rd Quarter Day (2 hours)';
+    case 'quarter-day-4': return '4th Quarter Day (2 hours)';
+    default: return 'Full Day';
+  }
 };

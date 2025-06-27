@@ -2,63 +2,18 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { DocumentRequest, DocumentTemplate } from '@/types';
-import { FileText, Download, Clock, CheckCircle, XCircle, Plus, Settings } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { FileText, Plus, Download, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 import { toast } from '@/components/ui/sonner';
-import { generatePDF } from '@/utils/pdfGenerator';
+import { DocumentRequest } from '@/types';
 
-interface EnhancedDocumentRequestSystemProps {
-  employeeId: string;
-  isHR?: boolean;
-  templates?: DocumentTemplate[];
-}
-
-// Mock templates for demonstration
-const mockTemplates: DocumentTemplate[] = [
-  {
-    id: '1',
-    name: 'Work Certificate Template',
-    type: 'work-certificate',
-    description: 'Standard work certificate',
-    templateUrl: '/templates/work-certificate.pdf',
-    variables: ['{{EMPLOYEE_NAME}}', '{{CIN}}', '{{POSITION}}', '{{START_DATE}}'],
-    createdBy: 'HR Admin',
-    createdDate: '2024-01-15',
-    isActive: true
-  },
-  {
-    id: '2',
-    name: 'Salary Certificate Template',
-    type: 'salary-certificate',
-    description: 'Salary certificate template',
-    templateUrl: '/templates/salary-certificate.pdf',
-    variables: ['{{EMPLOYEE_NAME}}', '{{CIN}}', '{{MONTHLY_SALARY}}', '{{ANNUAL_SALARY}}'],
-    createdBy: 'HR Admin',
-    createdDate: '2024-01-10',
-    isActive: true
-  }
-];
-
-// Mock requests data
 const mockRequests: DocumentRequest[] = [
   {
     id: '1',
@@ -66,413 +21,361 @@ const mockRequests: DocumentRequest[] = [
     employeeName: 'John Smith',
     documentType: 'work-certificate',
     status: 'completed',
-    submittedDate: '2025-06-20',
+    submittedDate: '2024-12-20',
     processedBy: 'HR Manager',
-    processedDate: '2025-06-21',
-    generatedDocumentUrl: '/documents/work-certificate-john.pdf'
+    processedDate: '2024-12-21',
+    generatedDocumentUrl: '/documents/work-cert-john-smith.pdf',
+    comments: 'Document generated successfully'
   },
   {
     id: '2',
-    employeeId: '101',
-    employeeName: 'John Smith',
-    documentType: 'payslip',
+    employeeId: '102',
+    employeeName: 'Sarah Johnson',
+    documentType: 'salary-certificate',
+    status: 'processing',
+    submittedDate: '2024-12-22',
+    comments: 'Under review'
+  },
+  {
+    id: '3',
+    employeeId: '103',
+    employeeName: 'Mike Wilson',
+    documentType: 'custom',
+    customDescription: 'Letter of recommendation for MBA application',
     status: 'pending',
-    submittedDate: '2025-06-22'
+    submittedDate: '2024-12-23'
   }
 ];
 
-const EnhancedDocumentRequestSystem: React.FC<EnhancedDocumentRequestSystemProps> = ({
-  employeeId,
-  isHR = false,
-  templates = mockTemplates
-}) => {
+interface RequestFormData {
+  employeeId: string;
+  employeeName: string;
+  documentType: 'payslip' | 'work-certificate' | 'salary-certificate' | 'mission-order' | 'custom';
+  customDescription?: string;
+  additionalNotes?: string;
+}
+
+const EnhancedDocumentRequestSystem = () => {
   const [requests, setRequests] = useState<DocumentRequest[]>(mockRequests);
-  const [isNewRequestDialogOpen, setIsNewRequestDialogOpen] = useState(false);
-  const [isProcessingDialogOpen, setIsProcessingDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<DocumentRequest | null>(null);
-  const [newRequest, setNewRequest] = useState({
-    documentType: 'payslip' as DocumentRequest['documentType'],
-    customDescription: '',
-    additionalData: {} as Record<string, string>
-  });
-  const [processingData, setProcessingData] = useState({
-    monthlySalary: '',
-    annualSalary: '',
-    missionLocation: '',
-    purpose: '',
-    endDate: ''
+
+  const form = useForm<RequestFormData>({
+    defaultValues: {
+      employeeId: '',
+      employeeName: '',
+      documentType: 'work-certificate',
+      customDescription: '',
+      additionalNotes: '',
+    },
   });
 
-  const getDocumentTypeLabel = (type: DocumentRequest['documentType']) => {
-    const labels = {
-      'payslip': 'Monthly Payslip',
-      'work-certificate': 'Work Certificate (Attestation de travail)',
-      'salary-certificate': 'Salary Certificate (Attestation de salaire)',
-      'mission-order': 'Mission Order (Ordre de mission)',
-      'custom': 'Custom Request'
+  const onSubmit = (data: RequestFormData) => {
+    const newRequest: DocumentRequest = {
+      id: `${Date.now()}`,
+      employeeId: data.employeeId,
+      employeeName: data.employeeName,
+      documentType: data.documentType,
+      customDescription: data.customDescription,
+      status: 'pending',
+      submittedDate: new Date().toISOString().split('T')[0],
+      comments: data.additionalNotes,
+      additionalData: {
+        submittedBy: 'Current User',
+        priority: 'normal'
+      }
     };
-    return labels[type];
+
+    setRequests([...requests, newRequest]);
+    setIsCreateDialogOpen(false);
+    form.reset();
+    toast.success('Document request submitted successfully');
   };
 
-  const getStatusColor = (status: DocumentRequest['status']) => {
+  const handleProcess = (id: string) => {
+    setRequests(requests.map(req => 
+      req.id === id 
+        ? { 
+            ...req, 
+            status: 'processing',
+            processedBy: 'Current HR User',
+            processedDate: new Date().toISOString().split('T')[0]
+          } 
+        : req
+    ));
+    toast.success('Request marked as processing');
+  };
+
+  const handleComplete = (id: string) => {
+    const request = requests.find(req => req.id === id);
+    if (!request) return;
+
+    // Simulate PDF generation
+    const generatedUrl = `/documents/${request.documentType}-${request.employeeName.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+
+    setRequests(requests.map(req => 
+      req.id === id 
+        ? { 
+            ...req, 
+            status: 'completed',
+            processedBy: 'Current HR User',
+            processedDate: new Date().toISOString().split('T')[0],
+            generatedDocumentUrl: generatedUrl,
+            comments: 'Document generated and ready for download'
+          } 
+        : req
+    ));
+    toast.success('Document generated successfully');
+  };
+
+  const handleDecline = (id: string) => {
+    setRequests(requests.map(req => 
+      req.id === id 
+        ? { 
+            ...req, 
+            status: 'declined',
+            processedBy: 'Current HR User',
+            processedDate: new Date().toISOString().split('T')[0],
+            comments: 'Request declined - insufficient information'
+          } 
+        : req
+    ));
+    toast.success('Request declined');
+  };
+
+  const handleDownload = (request: DocumentRequest) => {
+    if (request.generatedDocumentUrl) {
+      // In a real app, this would download the actual file
+      toast.success(`Downloading ${request.documentType} for ${request.employeeName}`);
+      console.log('Downloading:', request.generatedDocumentUrl);
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case 'declined': return <XCircle className="h-4 w-4 text-red-600" />;
+      case 'processing': return <Clock className="h-4 w-4 text-blue-600" />;
+      default: return <Clock className="h-4 w-4 text-yellow-600" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800';
-      case 'processing': return 'bg-blue-100 text-blue-800';
       case 'declined': return 'bg-red-100 text-red-800';
+      case 'processing': return 'bg-blue-100 text-blue-800';
       default: return 'bg-yellow-100 text-yellow-800';
     }
   };
 
-  const getStatusIcon = (status: DocumentRequest['status']) => {
-    switch (status) {
-      case 'completed': return <CheckCircle className="h-4 w-4" />;
-      case 'processing': return <Clock className="h-4 w-4" />;
-      case 'declined': return <XCircle className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+  const getDocumentLabel = (type: string) => {
+    switch (type) {
+      case 'work-certificate': return 'Work Certificate';
+      case 'salary-certificate': return 'Salary Certificate';
+      case 'mission-order': return 'Mission Order';
+      case 'payslip': return 'Payslip';
+      default: return 'Custom Document';
     }
   };
-
-  const getActiveTemplate = (documentType: DocumentRequest['documentType']) => {
-    return templates.find(t => t.type === documentType && t.isActive);
-  };
-
-  const handleSubmitRequest = () => {
-    if (newRequest.documentType === 'custom' && !newRequest.customDescription.trim()) {
-      toast.error('Please provide a description for custom requests');
-      return;
-    }
-
-    const request: DocumentRequest = {
-      id: `${Date.now()}`,
-      employeeId,
-      employeeName: 'Current User',
-      documentType: newRequest.documentType,
-      customDescription: newRequest.customDescription || undefined,
-      status: 'pending',
-      submittedDate: new Date().toISOString().split('T')[0],
-      additionalData: newRequest.additionalData
-    };
-
-    setRequests([request, ...requests]);
-    setNewRequest({ 
-      documentType: 'payslip', 
-      customDescription: '', 
-      additionalData: {} 
-    });
-    setIsNewRequestDialogOpen(false);
-    toast.success('Document request submitted successfully');
-  };
-
-  const handleProcessRequest = (requestId: string, action: 'approve' | 'decline') => {
-    setRequests(requests.map(req => {
-      if (req.id === requestId) {
-        return {
-          ...req,
-          status: action === 'approve' ? 'processing' : 'declined',
-          processedBy: 'HR Manager',
-          processedDate: new Date().toISOString().split('T')[0]
-        };
-      }
-      return req;
-    }));
-    
-    toast.success(`Request ${action === 'approve' ? 'approved' : 'declined'} successfully`);
-  };
-
-  const handleGenerateDocument = async (request: DocumentRequest) => {
-    const template = getActiveTemplate(request.documentType);
-    if (!template) {
-      toast.error('No active template found for this document type');
-      return;
-    }
-
-    toast.info('Generating document...');
-    
-    try {
-      // Mock employee data - in real app, fetch from API
-      const mockEmployee = {
-        id: request.employeeId,
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@company.com',
-        phone: '(555) 123-4567',
-        position: 'Software Engineer',
-        department: 'Engineering',
-        hireDate: '2022-03-15',
-        status: 'active' as const
-      };
-
-      const generatedUrl = await generatePDF({
-        template,
-        employee: mockEmployee,
-        additionalData: {
-          ...processingData,
-          ...request.additionalData
-        }
-      });
-
-      setRequests(requests.map(req => {
-        if (req.id === request.id) {
-          return {
-            ...req,
-            status: 'completed',
-            generatedDocumentUrl: generatedUrl
-          };
-        }
-        return req;
-      }));
-
-      setIsProcessingDialogOpen(false);
-      setSelectedRequest(null);
-      setProcessingData({
-        monthlySalary: '',
-        annualSalary: '',
-        missionLocation: '',
-        purpose: '',
-        endDate: ''
-      });
-      
-      toast.success('Document generated successfully!');
-    } catch (error) {
-      toast.error('Failed to generate document');
-      console.error('PDF Generation Error:', error);
-    }
-  };
-
-  const openProcessingDialog = (request: DocumentRequest) => {
-    setSelectedRequest(request);
-    setIsProcessingDialogOpen(true);
-  };
-
-  const filteredRequests = isHR ? requests : requests.filter(req => req.employeeId === employeeId);
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Document Requests</h2>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="flex items-center gap-2">
+              <Plus size={16} />
+              New Request
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Request Document</DialogTitle>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="employeeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Employee ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter employee ID" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="employeeName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Employee Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter employee name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="documentType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Document Type</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select document type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="work-certificate">Work Certificate</SelectItem>
+                          <SelectItem value="salary-certificate">Salary Certificate</SelectItem>
+                          <SelectItem value="mission-order">Mission Order</SelectItem>
+                          <SelectItem value="payslip">Monthly Payslip</SelectItem>
+                          <SelectItem value="custom">Custom Request</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {form.watch('documentType') === 'custom' && (
+                  <FormField
+                    control={form.control}
+                    name="customDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Custom Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Describe the custom document needed" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                <FormField
+                  control={form.control}
+                  name="additionalNotes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Additional Notes (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Any additional information" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <Button type="submit">Submit Request</Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <Card>
+        <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            {isHR ? 'Document Requests (All)' : 'My Document Requests'}
+            All Requests
           </CardTitle>
-          {!isHR && (
-            <Dialog open={isNewRequestDialogOpen} onOpenChange={setIsNewRequestDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  New Request
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Request Document</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div>
-                    <Label htmlFor="documentType">Document Type</Label>
-                    <Select
-                      value={newRequest.documentType}
-                      onValueChange={(value: DocumentRequest['documentType']) =>
-                        setNewRequest({...newRequest, documentType: value})
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {templates.filter(t => t.isActive).map(template => (
-                          <SelectItem key={template.id} value={template.type}>
-                            {getDocumentTypeLabel(template.type)}
-                          </SelectItem>
-                        ))}
-                        <SelectItem value="custom">Custom Request</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  {newRequest.documentType === 'custom' && (
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Employee</TableHead>
+                <TableHead>Document Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Submitted</TableHead>
+                <TableHead>Processed By</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {requests.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell>
                     <div>
-                      <Label htmlFor="customDescription">Description</Label>
-                      <Textarea
-                        id="customDescription"
-                        value={newRequest.customDescription}
-                        onChange={(e) => setNewRequest({...newRequest, customDescription: e.target.value})}
-                        placeholder="Please describe the document you need..."
-                      />
+                      <p className="font-medium">{request.employeeName}</p>
+                      <p className="text-sm text-gray-500">ID: {request.employeeId}</p>
                     </div>
-                  )}
-                </div>
-                <DialogFooter>
-                  <Button onClick={handleSubmitRequest}>Submit Request</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {filteredRequests.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No document requests</p>
-          ) : (
-            filteredRequests.map((request) => (
-              <div key={request.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-medium">
-                      {getDocumentTypeLabel(request.documentType)}
-                    </h4>
-                    <Badge className={getStatusColor(request.status)} variant="outline">
-                      <div className="flex items-center gap-1">
-                        {getStatusIcon(request.status)}
-                        {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
-                      </div>
-                    </Badge>
-                  </div>
-                  
-                  {isHR && (
-                    <p className="text-sm text-gray-600 mb-1">
-                      Requested by: {request.employeeName}
-                    </p>
-                  )}
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <span>Submitted: {new Date(request.submittedDate).toLocaleDateString()}</span>
-                    {request.processedDate && (
-                      <span>Processed: {new Date(request.processedDate).toLocaleDateString()}</span>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <p>{getDocumentLabel(request.documentType)}</p>
+                      {request.customDescription && (
+                        <p className="text-sm text-gray-500">{request.customDescription}</p>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
+                      {getStatusIcon(request.status)}
+                      <span className="ml-1 capitalize">{request.status}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{request.submittedDate}</TableCell>
+                  <TableCell>{request.processedBy || '-'}</TableCell>
+                  <TableCell className="text-right space-x-1">
+                    {request.status === 'pending' && (
+                      <>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleProcess(request.id)}
+                          className="text-blue-600"
+                        >
+                          Process
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDecline(request.id)}
+                          className="text-red-600"
+                        >
+                          Decline
+                        </Button>
+                      </>
                     )}
-                  </div>
-                  
-                  {request.customDescription && (
-                    <p className="text-sm text-gray-600 mt-1 italic">
-                      "{request.customDescription}"
-                    </p>
-                  )}
-                </div>
-                
-                <div className="flex items-center space-x-2 ml-4">
-                  {request.generatedDocumentUrl && (
-                    <Button variant="ghost" size="sm">
-                      <Download className="h-4 w-4 mr-1" />
-                      Download
-                    </Button>
-                  )}
-                  
-                  {isHR && request.status === 'pending' && (
-                    <>
-                      <Button
-                        variant="ghost"
+                    {request.status === 'processing' && (
+                      <Button 
+                        variant="ghost" 
                         size="sm"
-                        onClick={() => handleProcessRequest(request.id, 'approve')}
-                        className="text-green-600 hover:text-green-800"
+                        onClick={() => handleComplete(request.id)}
+                        className="text-green-600"
                       >
-                        <CheckCircle className="h-4 w-4 mr-1" />
-                        Approve
+                        Complete
                       </Button>
-                      <Button
-                        variant="ghost"
+                    )}
+                    {request.status === 'completed' && request.generatedDocumentUrl && (
+                      <Button 
+                        variant="ghost" 
                         size="sm"
-                        onClick={() => handleProcessRequest(request.id, 'decline')}
-                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDownload(request)}
+                        className="text-blue-600"
                       >
-                        <XCircle className="h-4 w-4 mr-1" />
-                        Decline
+                        <Download size={16} />
                       </Button>
-                    </>
-                  )}
-                  
-                  {isHR && request.status === 'processing' && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openProcessingDialog(request)}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      <Settings className="h-4 w-4 mr-1" />
-                      Generate
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </CardContent>
-
-      {/* Document Generation Dialog */}
-      <Dialog open={isProcessingDialogOpen} onOpenChange={setIsProcessingDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Generate Document</DialogTitle>
-          </DialogHeader>
-          {selectedRequest && (
-            <div className="space-y-4 py-4">
-              <p className="text-sm text-gray-600">
-                Generating {getDocumentTypeLabel(selectedRequest.documentType)} for {selectedRequest.employeeName}
-              </p>
-              
-              {selectedRequest.documentType === 'salary-certificate' && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="monthlySalary">Monthly Salary</Label>
-                    <Input
-                      id="monthlySalary"
-                      value={processingData.monthlySalary}
-                      onChange={(e) => setProcessingData({...processingData, monthlySalary: e.target.value})}
-                      placeholder="Enter monthly salary"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="annualSalary">Annual Salary</Label>
-                    <Input
-                      id="annualSalary"
-                      value={processingData.annualSalary}
-                      onChange={(e) => setProcessingData({...processingData, annualSalary: e.target.value})}
-                      placeholder="Enter annual salary"
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {selectedRequest.documentType === 'mission-order' && (
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="missionLocation">Mission Location</Label>
-                    <Input
-                      id="missionLocation"
-                      value={processingData.missionLocation}
-                      onChange={(e) => setProcessingData({...processingData, missionLocation: e.target.value})}
-                      placeholder="Enter mission location"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="purpose">Purpose</Label>
-                    <Input
-                      id="purpose"
-                      value={processingData.purpose}
-                      onChange={(e) => setProcessingData({...processingData, purpose: e.target.value})}
-                      placeholder="Enter mission purpose"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="endDate">End Date</Label>
-                    <Input
-                      id="endDate"
-                      type="date"
-                      value={processingData.endDate}
-                      onChange={(e) => setProcessingData({...processingData, endDate: e.target.value})}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          <DialogFooter>
-            <Button onClick={() => selectedRequest && handleGenerateDocument(selectedRequest)}>
-              Generate Document
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Card>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

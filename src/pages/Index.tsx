@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
@@ -13,6 +12,9 @@ import Settings from '@/components/Settings';
 import EmployeePortal from '@/components/EmployeePortal';
 import UserManagement from '@/components/UserManagement';
 import FeatureVerificationDashboard from '@/components/FeatureVerificationDashboard';
+import HolidayCalendar from '@/components/HolidayCalendar';
+import DocumentTemplateManager from '@/components/DocumentTemplateManager';
+import EnhancedDocumentRequestSystem from '@/components/EnhancedDocumentRequestSystem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
@@ -46,6 +48,9 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
           <TabsTrigger value="user-management">User Management</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
           <TabsTrigger value="employee-portal">Employee Portal</TabsTrigger>
+          <TabsTrigger value="holidays">Holidays</TabsTrigger>
+          <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="document-requests">Doc Requests</TabsTrigger>
           <TabsTrigger value="feature-verification">Feature Test</TabsTrigger>
         </TabsList>
         
@@ -83,6 +88,18 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
         
         <TabsContent value="employee-portal" className="mt-0">
           <EmployeePortal />
+        </TabsContent>
+        
+        <TabsContent value="holidays" className="mt-0">
+          <HolidayCalendar />
+        </TabsContent>
+        
+        <TabsContent value="templates" className="mt-0">
+          <DocumentTemplateManager />
+        </TabsContent>
+        
+        <TabsContent value="document-requests" className="mt-0">
+          <EnhancedDocumentRequestSystem />
         </TabsContent>
         
         <TabsContent value="feature-verification" className="mt-0">
