@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
@@ -16,6 +17,19 @@ import HolidayCalendar from '@/components/HolidayCalendar';
 import DocumentTemplateManager from '@/components/DocumentTemplateManager';
 import EnhancedDocumentRequestSystem from '@/components/EnhancedDocumentRequestSystem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  LayoutDashboard, 
+  Users, 
+  Briefcase, 
+  Calendar, 
+  MapPin, 
+  BarChart, 
+  Key, 
+  Settings as SettingsIcon, 
+  User,
+  FileText,
+  CheckCircle
+} from "lucide-react";
 
 const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
   const location = useLocation();
@@ -31,6 +45,22 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
     }
   }, [location.pathname, initialActivePage]);
 
+  const tabs = [
+    { value: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { value: 'employees', label: 'Employees', icon: Users },
+    { value: 'departments', label: 'Departments', icon: Briefcase },
+    { value: 'leave-requests', label: 'Leave Requests', icon: Calendar },
+    { value: 'remote-requests', label: 'Remote Work', icon: MapPin },
+    { value: 'reports', label: 'Reports', icon: BarChart },
+    { value: 'user-management', label: 'Users', icon: Key },
+    { value: 'settings', label: 'Settings', icon: SettingsIcon },
+    { value: 'employee-portal', label: 'Portal', icon: User },
+    { value: 'holidays', label: 'Holidays', icon: Calendar },
+    { value: 'templates', label: 'Templates', icon: FileText },
+    { value: 'document-requests', label: 'Docs', icon: FileText },
+    { value: 'feature-verification', label: 'Test', icon: CheckCircle },
+  ];
+
   return (
     <Layout activePage={activeTab}>
       <Tabs
@@ -38,73 +68,82 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
         onValueChange={setActiveTab}
         className="w-full"
       >
-        <TabsList className="mb-6 bg-white overflow-x-auto w-full flex flex-nowrap">
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="employees">Employees</TabsTrigger>
-          <TabsTrigger value="departments">Departments</TabsTrigger>
-          <TabsTrigger value="leave-requests">Leave Requests</TabsTrigger>
-          <TabsTrigger value="remote-requests">Remote Requests</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="user-management">User Management</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
-          <TabsTrigger value="employee-portal">Employee Portal</TabsTrigger>
-          <TabsTrigger value="holidays">Holidays</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
-          <TabsTrigger value="document-requests">Doc Requests</TabsTrigger>
-          <TabsTrigger value="feature-verification">Feature Test</TabsTrigger>
-        </TabsList>
+        {/* Modern Horizontal Tabs */}
+        <div className="mb-6 bg-white rounded-xl shadow-sm border border-slate-200 p-2">
+          <TabsList className="bg-transparent w-full justify-start overflow-x-auto flex-nowrap gap-1 h-auto p-0">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="
+                  flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg
+                  data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600
+                  data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/25
+                  hover:bg-slate-50 text-slate-600 hover:text-slate-900
+                  transition-all duration-200 whitespace-nowrap flex-shrink-0
+                  border border-transparent data-[state=active]:border-blue-200
+                "
+              >
+                <tab.icon className="h-4 w-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
         
-        <TabsContent value="dashboard" className="mt-0">
-          <Dashboard />
-        </TabsContent>
-        
-        <TabsContent value="employees" className="mt-0">
-          <EmployeeDirectory />
-        </TabsContent>
-        
-        <TabsContent value="departments" className="mt-0">
-          <DepartmentManagement />
-        </TabsContent>
-        
-        <TabsContent value="leave-requests" className="mt-0">
-          <LeaveRequestManagement />
-        </TabsContent>
-        
-        <TabsContent value="remote-requests" className="mt-0">
-          <RemoteRequestManagement />
-        </TabsContent>
-        
-        <TabsContent value="reports" className="mt-0">
-          <Reports />
-        </TabsContent>
-        
-        <TabsContent value="user-management" className="mt-0">
-          <UserManagement />
-        </TabsContent>
-        
-        <TabsContent value="settings" className="mt-0">
-          <Settings />
-        </TabsContent>
-        
-        <TabsContent value="employee-portal" className="mt-0">
-          <EmployeePortal />
-        </TabsContent>
-        
-        <TabsContent value="holidays" className="mt-0">
-          <HolidayCalendar />
-        </TabsContent>
-        
-        <TabsContent value="templates" className="mt-0">
-          <DocumentTemplateManager />
-        </TabsContent>
-        
-        <TabsContent value="document-requests" className="mt-0">
-          <EnhancedDocumentRequestSystem />
-        </TabsContent>
-        
-        <TabsContent value="feature-verification" className="mt-0">
-          <FeatureVerificationDashboard />
-        </TabsContent>
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <TabsContent value="dashboard" className="mt-0">
+            <Dashboard />
+          </TabsContent>
+          
+          <TabsContent value="employees" className="mt-0">
+            <EmployeeDirectory />
+          </TabsContent>
+          
+          <TabsContent value="departments" className="mt-0">
+            <DepartmentManagement />
+          </TabsContent>
+          
+          <TabsContent value="leave-requests" className="mt-0">
+            <LeaveRequestManagement />
+          </TabsContent>
+          
+          <TabsContent value="remote-requests" className="mt-0">
+            <RemoteRequestManagement />
+          </TabsContent>
+          
+          <TabsContent value="reports" className="mt-0">
+            <Reports />
+          </TabsContent>
+          
+          <TabsContent value="user-management" className="mt-0">
+            <UserManagement />
+          </TabsContent>
+          
+          <TabsContent value="settings" className="mt-0">
+            <Settings />
+          </TabsContent>
+          
+          <TabsContent value="employee-portal" className="mt-0">
+            <EmployeePortal />
+          </TabsContent>
+          
+          <TabsContent value="holidays" className="mt-0">
+            <HolidayCalendar />
+          </TabsContent>
+          
+          <TabsContent value="templates" className="mt-0">
+            <DocumentTemplateManager />
+          </TabsContent>
+          
+          <TabsContent value="document-requests" className="mt-0">
+            <EnhancedDocumentRequestSystem />
+          </TabsContent>
+          
+          <TabsContent value="feature-verification" className="mt-0">
+            <FeatureVerificationDashboard />
+          </TabsContent>
+        </div>
       </Tabs>
     </Layout>
   );
