@@ -28,7 +28,8 @@ import {
   Clock,
   UserCheck,
   Menu,
-  X
+  X,
+  CheckCircle
 } from "lucide-react";
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -51,7 +52,6 @@ export function Layout({ children, activePage }: LayoutProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -59,17 +59,9 @@ export function Layout({ children, activePage }: LayoutProps) {
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen flex w-full bg-background overflow-x-hidden">
         <AppSidebar activePage={activePage} />
-        
-        {/* Mobile Overlay */}
-        {isMobile && mobileMenuOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-        )}
 
         <main className="flex-1 flex flex-col min-h-screen min-w-0">
           {/* Modern Header */}
@@ -143,18 +135,19 @@ function AppSidebar({ activePage }: { activePage: string }) {
   const isAdmin = user?.role === 'admin' || user?.role === 'manager';
   
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard, id: 'dashboard', showFor: ['admin', 'manager'], color: 'text-primary' },
-    { name: 'Employees', href: '/employees', icon: Users, id: 'employees', showFor: ['admin', 'manager'], color: 'text-secondary' },
-    { name: 'Departments', href: '/departments', icon: Briefcase, id: 'departments', showFor: ['admin', 'manager'], color: 'text-purple-500' },
-    { name: 'Leave Requests', href: '/leave-requests', icon: Calendar, id: 'leave-requests', showFor: ['admin', 'manager'], color: 'text-orange-500' },
-    { name: 'Remote Work', href: '/remote-requests', icon: MapPin, id: 'remote-requests', showFor: ['admin', 'manager'], color: 'text-secondary' },
-    { name: 'Reports', href: '/reports', icon: BarChart, id: 'reports', showFor: ['admin', 'manager'], color: 'text-primary' },
-    { name: 'User Management', href: '/user-management', icon: Key, id: 'user-management', showFor: ['admin'], color: 'text-destructive' },
-    { name: 'Settings', href: '/settings', icon: Settings, id: 'settings', showFor: ['admin', 'manager'], color: 'text-muted-foreground' },
-    { name: 'Employee Portal', href: '/employee-portal', icon: User, id: 'employee-portal', showFor: ['employee'], color: 'text-primary' },
-    { name: 'Holidays', href: '/holidays', icon: Calendar, id: 'holidays', showFor: ['admin', 'manager', 'employee'], color: 'text-secondary' },
-    { name: 'Templates', href: '/templates', icon: FileText, id: 'templates', showFor: ['admin', 'manager'], color: 'text-amber-600' },
-    { name: 'Doc Requests', href: '/document-requests', icon: FileText, id: 'document-requests', showFor: ['admin', 'manager', 'employee'], color: 'text-secondary' },
+    { name: 'Dashboard', href: '/', icon: LayoutDashboard, id: 'dashboard', showFor: ['admin', 'manager'] },
+    { name: 'Employees', href: '/employees', icon: Users, id: 'employees', showFor: ['admin', 'manager'] },
+    { name: 'Departments', href: '/departments', icon: Briefcase, id: 'departments', showFor: ['admin', 'manager'] },
+    { name: 'Leave Requests', href: '/leave-requests', icon: Calendar, id: 'leave-requests', showFor: ['admin', 'manager'] },
+    { name: 'Remote Work', href: '/remote-requests', icon: MapPin, id: 'remote-requests', showFor: ['admin', 'manager'] },
+    { name: 'Reports', href: '/reports', icon: BarChart, id: 'reports', showFor: ['admin', 'manager'] },
+    { name: 'User Management', href: '/user-management', icon: Key, id: 'user-management', showFor: ['admin'] },
+    { name: 'Settings', href: '/settings', icon: Settings, id: 'settings', showFor: ['admin', 'manager'] },
+    { name: 'Employee Portal', href: '/employee-portal', icon: User, id: 'employee-portal', showFor: ['employee'] },
+    { name: 'Holidays', href: '/holidays', icon: Calendar, id: 'holidays', showFor: ['admin', 'manager', 'employee'] },
+    { name: 'Templates', href: '/templates', icon: FileText, id: 'templates', showFor: ['admin', 'manager'] },
+    { name: 'Doc Requests', href: '/document-requests', icon: FileText, id: 'document-requests', showFor: ['admin', 'manager', 'employee'] },
+    { name: 'Testing', href: '/feature-verification', icon: CheckCircle, id: 'feature-verification', showFor: ['admin', 'manager'] },
   ];
 
   // Filter navigation items based on user role
@@ -171,17 +164,17 @@ function AppSidebar({ activePage }: { activePage: string }) {
   };
 
   return (
-    <Sidebar className="border-r border-border bg-white/95 backdrop-blur-md shadow-lg">
-      <SidebarHeader className="p-6 border-b border-border">
+    <Sidebar className="border-r border-border bg-primary shadow-lg">
+      <SidebarHeader className="p-6 border-b border-primary-foreground/10">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg">
-            <Home className="h-5 w-5 text-primary-foreground" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary shadow-lg">
+            <Home className="h-5 w-5 text-secondary-foreground" />
           </div>
           <div className="min-w-0">
-            <h1 className="font-bold text-xl text-primary truncate">
+            <h1 className="font-bold text-xl text-primary-foreground truncate">
               HR Manager
             </h1>
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">Professional Edition</p>
+            <p className="text-xs text-primary-foreground/70 mt-0.5 truncate">Professional Edition</p>
           </div>
         </div>
       </SidebarHeader>
@@ -193,27 +186,19 @@ function AppSidebar({ activePage }: { activePage: string }) {
               <SidebarMenuButton
                 asChild
                 className={`
-                  group relative flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer
-                  ${activePage === item.id 
-                    ? 'bg-primary text-primary-foreground shadow-lg' 
-                    : 'hover:bg-accent text-foreground hover:text-accent-foreground'
-                  }
+                  sidebar-nav-item group relative flex items-center gap-3 px-3 py-3 cursor-pointer w-full
+                  ${activePage === item.id ? 'active' : ''}
                 `}
               >
                 <button 
                   onClick={(e) => handleNavigate(item.href, e)}
-                  className="flex items-center gap-3 w-full text-left"
+                  className="flex items-center gap-3 w-full text-left text-primary-foreground"
                 >
                   <item.icon 
                     size={20} 
-                    className={activePage === item.id ? 'text-primary-foreground' : item.color}
+                    className="flex-shrink-0"
                   />
                   <span className="font-medium text-sm truncate">{item.name}</span>
-                  {activePage === item.id && (
-                    <div className="absolute inset-y-0 right-2 flex items-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground opacity-75"></div>
-                    </div>
-                  )}
                 </button>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -221,16 +206,16 @@ function AppSidebar({ activePage }: { activePage: string }) {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-border mt-auto">
-        <div className="flex items-center gap-3 px-2 py-3 rounded-xl bg-accent">
-          <div className="rounded-full bg-primary h-9 w-9 flex items-center justify-center shadow-md flex-shrink-0">
-            <span className="text-primary-foreground text-sm font-medium">
+      <SidebarFooter className="p-4 border-t border-primary-foreground/10 mt-auto">
+        <div className="flex items-center gap-3 px-2 py-3 rounded-xl bg-white/10">
+          <div className="rounded-full bg-secondary h-9 w-9 flex items-center justify-center shadow-md flex-shrink-0">
+            <span className="text-secondary-foreground text-sm font-medium">
               {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
             </span>
           </div>
           <div className="text-sm flex-1 min-w-0">
-            <p className="font-medium text-foreground truncate">{user?.name}</p>
-            <p className="text-muted-foreground text-xs truncate">{user?.email}</p>
+            <p className="font-medium text-primary-foreground truncate">{user?.name}</p>
+            <p className="text-primary-foreground/70 text-xs truncate">{user?.email}</p>
           </div>
         </div>
       </SidebarFooter>

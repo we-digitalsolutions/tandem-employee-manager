@@ -43,6 +43,12 @@ const App = () => (
             <Route path="/leave-requests" element={<ProtectedRoute><Index activePage="leave-requests" /></ProtectedRoute>} />
             <Route path="/remote-requests" element={<ProtectedRoute><Index activePage="remote-requests" /></ProtectedRoute>} />
             
+            {/* New Routes - Fixed 404 issues */}
+            <Route path="/holidays" element={<ProtectedRoute><Index activePage="holidays" /></ProtectedRoute>} />
+            <Route path="/templates" element={<ProtectedRoute><Index activePage="templates" /></ProtectedRoute>} />
+            <Route path="/document-requests" element={<ProtectedRoute><Index activePage="document-requests" /></ProtectedRoute>} />
+            <Route path="/feature-verification" element={<ProtectedRoute><Index activePage="feature-verification" /></ProtectedRoute>} />
+            
             {/* Catch-all route - redirect to 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>

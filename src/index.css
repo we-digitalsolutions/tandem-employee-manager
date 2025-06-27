@@ -23,7 +23,7 @@
     --muted: 240 247 244;
     --muted-foreground: 210 29% 45%;
 
-    --accent: 240 247 244;
+    --accent: 159 35% 97%; /* #f7fbf9 instead of yellow */
     --accent-foreground: 210 29% 31%;
 
     --destructive: 0 84.2% 60.2%;
@@ -195,6 +195,44 @@
   .tab-scroll-container::-webkit-scrollbar-thumb {
     background-color: rgba(174, 174, 174, 0.5);
     border-radius: 2px;
+  }
+
+  /* Sidebar navigation improvements */
+  .sidebar-nav-item {
+    @apply relative transition-all duration-200 rounded-xl;
+  }
+
+  .sidebar-nav-item.active {
+    @apply bg-secondary text-white shadow-lg;
+  }
+
+  .sidebar-nav-item.active::after {
+    content: '';
+    @apply absolute right-2 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-full opacity-90;
+  }
+
+  .sidebar-nav-item:not(.active):hover {
+    @apply bg-white/10 text-white;
+  }
+
+  /* Horizontal tab improvements */
+  .horizontal-tab {
+    @apply relative transition-all duration-200;
+  }
+
+  .horizontal-tab.active::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-0.5 bg-secondary rounded-full;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
   }
 }
 

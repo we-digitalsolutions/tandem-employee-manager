@@ -76,14 +76,14 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
                   <TabsTrigger
                     key={tab.value}
                     value={tab.value}
-                    className="
-                      flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg
-                      data-[state=active]:bg-primary data-[state=active]:text-primary-foreground 
-                      data-[state=active]:shadow-lg
-                      hover:bg-accent text-muted-foreground hover:text-accent-foreground
-                      transition-all duration-200 whitespace-nowrap flex-shrink-0
-                      border border-transparent data-[state=active]:border-primary/20
-                    "
+                    className={`
+                      horizontal-tab flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg
+                      transition-all duration-200 whitespace-nowrap flex-shrink-0 border border-transparent
+                      ${activeTab === tab.value 
+                        ? 'bg-primary text-primary-foreground shadow-lg border-primary/20' 
+                        : 'hover:bg-accent text-muted-foreground hover:text-accent-foreground'
+                      }
+                    `}
                   >
                     <tab.icon className="h-4 w-4 flex-shrink-0" />
                     <span className="hidden sm:inline">{tab.label}</span>
