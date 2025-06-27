@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
@@ -63,88 +62,92 @@ const Index = ({ activePage: initialActivePage }: { activePage?: string }) => {
 
   return (
     <Layout activePage={activeTab}>
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="w-full"
-      >
-        {/* Modern Horizontal Tabs */}
-        <div className="mb-6 bg-white rounded-xl shadow-sm border border-slate-200 p-2">
-          <TabsList className="bg-transparent w-full justify-start overflow-x-auto flex-nowrap gap-1 h-auto p-0">
-            {tabs.map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className="
-                  flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg
-                  data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600
-                  data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/25
-                  hover:bg-slate-50 text-slate-600 hover:text-slate-900
-                  transition-all duration-200 whitespace-nowrap flex-shrink-0
-                  border border-transparent data-[state=active]:border-blue-200
-                "
-              >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <TabsContent value="dashboard" className="mt-0">
-            <Dashboard />
-          </TabsContent>
+      <div className="max-w-full overflow-x-hidden">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full"
+        >
+          {/* Modern Horizontal Tabs */}
+          <div className="mb-6 bg-white rounded-xl shadow-sm border border-border p-2">
+            <div className="tab-scroll-container">
+              <TabsList className="bg-transparent w-full min-w-max justify-start flex-nowrap gap-1 h-auto p-0">
+                {tabs.map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="
+                      flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg
+                      data-[state=active]:bg-primary data-[state=active]:text-primary-foreground 
+                      data-[state=active]:shadow-lg
+                      hover:bg-accent text-muted-foreground hover:text-accent-foreground
+                      transition-all duration-200 whitespace-nowrap flex-shrink-0
+                      border border-transparent data-[state=active]:border-primary/20
+                    "
+                  >
+                    <tab.icon className="h-4 w-4 flex-shrink-0" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
+          </div>
           
-          <TabsContent value="employees" className="mt-0">
-            <EmployeeDirectory />
-          </TabsContent>
-          
-          <TabsContent value="departments" className="mt-0">
-            <DepartmentManagement />
-          </TabsContent>
-          
-          <TabsContent value="leave-requests" className="mt-0">
-            <LeaveRequestManagement />
-          </TabsContent>
-          
-          <TabsContent value="remote-requests" className="mt-0">
-            <RemoteRequestManagement />
-          </TabsContent>
-          
-          <TabsContent value="reports" className="mt-0">
-            <Reports />
-          </TabsContent>
-          
-          <TabsContent value="user-management" className="mt-0">
-            <UserManagement />
-          </TabsContent>
-          
-          <TabsContent value="settings" className="mt-0">
-            <Settings />
-          </TabsContent>
-          
-          <TabsContent value="employee-portal" className="mt-0">
-            <EmployeePortal />
-          </TabsContent>
-          
-          <TabsContent value="holidays" className="mt-0">
-            <HolidayCalendar />
-          </TabsContent>
-          
-          <TabsContent value="templates" className="mt-0">
-            <DocumentTemplateManager />
-          </TabsContent>
-          
-          <TabsContent value="document-requests" className="mt-0">
-            <EnhancedDocumentRequestSystem />
-          </TabsContent>
-          
-          <TabsContent value="feature-verification" className="mt-0">
-            <FeatureVerificationDashboard />
-          </TabsContent>
-        </div>
-      </Tabs>
+          <div className="bg-white rounded-xl shadow-sm border border-border p-6 max-w-full overflow-x-hidden">
+            <TabsContent value="dashboard" className="mt-0">
+              <Dashboard />
+            </TabsContent>
+            
+            <TabsContent value="employees" className="mt-0">
+              <EmployeeDirectory />
+            </TabsContent>
+            
+            <TabsContent value="departments" className="mt-0">
+              <DepartmentManagement />
+            </TabsContent>
+            
+            <TabsContent value="leave-requests" className="mt-0">
+              <LeaveRequestManagement />
+            </TabsContent>
+            
+            <TabsContent value="remote-requests" className="mt-0">
+              <RemoteRequestManagement />
+            </TabsContent>
+            
+            <TabsContent value="reports" className="mt-0">
+              <Reports />
+            </TabsContent>
+            
+            <TabsContent value="user-management" className="mt-0">
+              <UserManagement />
+            </TabsContent>
+            
+            <TabsContent value="settings" className="mt-0">
+              <Settings />
+            </TabsContent>
+            
+            <TabsContent value="employee-portal" className="mt-0">
+              <EmployeePortal />
+            </TabsContent>
+            
+            <TabsContent value="holidays" className="mt-0">
+              <HolidayCalendar />
+            </TabsContent>
+            
+            <TabsContent value="templates" className="mt-0">
+              <DocumentTemplateManager />
+            </TabsContent>
+            
+            <TabsContent value="document-requests" className="mt-0">
+              <EnhancedDocumentRequestSystem />
+            </TabsContent>
+            
+            <TabsContent value="feature-verification" className="mt-0">
+              <FeatureVerificationDashboard />
+            </TabsContent>
+          </div>
+        </Tabs>
+      </div>
     </Layout>
   );
 };
