@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -62,14 +61,14 @@ const FeatureVerificationDashboard = () => {
         {
           name: 'File Upload Justification',
           description: 'Upload PDF, images for justification',
-          status: 'not-implemented',
-          issues: ['File upload component exists but not integrated with requests']
+          status: 'passing',
+          component: 'FileUploadIntegration'
         },
         {
           name: 'Leave Balance Check',
           description: 'Check balance and alert if over quota',
-          status: 'partial',
-          issues: ['Balance display exists but quota alerts not implemented']
+          status: 'passing',
+          component: 'LeaveBalanceQuotaAlert'
         },
         {
           name: 'Two-Step Approval Workflow',
@@ -201,8 +200,8 @@ const FeatureVerificationDashboard = () => {
         {
           name: 'Geolocation Restrictions',
           description: 'IP/location-based clock-in restrictions',
-          status: 'not-implemented',
-          issues: ['Requires geolocation API integration']
+          status: 'passing',
+          component: 'GeolocationAttendance'
         }
       ]
     },
@@ -231,8 +230,9 @@ const FeatureVerificationDashboard = () => {
         {
           name: '360-degree Feedback',
           description: 'Multi-perspective feedback collection',
-          status: 'not-implemented',
-          issues: ['Basic review system exists, 360-degree feature missing']
+          status: 'partial',
+          issues: ['Basic review system exists, 360-degree feature needs enhancement'],
+          component: 'PerformanceManagement'
         }
       ]
     },
@@ -255,8 +255,8 @@ const FeatureVerificationDashboard = () => {
         {
           name: 'Document Collection',
           description: 'Collect required documents during onboarding',
-          status: 'partial',
-          issues: ['Task management exists, document collection integration needed']
+          status: 'passing',
+          component: 'FileUploadIntegration'
         },
         {
           name: 'Offboarding Checklist',
@@ -285,8 +285,8 @@ const FeatureVerificationDashboard = () => {
         {
           name: 'Export Functionality',
           description: 'Export to Excel, CSV, PDF',
-          status: 'partial',
-          issues: ['Export buttons exist but actual export logic incomplete']
+          status: 'passing',
+          component: 'ExportFunctionality'
         },
         {
           name: 'Scheduled Reports',
@@ -316,8 +316,8 @@ const FeatureVerificationDashboard = () => {
         {
           name: 'Push Notifications',
           description: 'Real-time notifications',
-          status: 'not-implemented',
-          issues: ['Requires service worker and notification API']
+          status: 'passing',
+          component: 'PushNotificationService'
         }
       ]
     }
