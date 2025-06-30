@@ -92,15 +92,15 @@ const Login = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
                         <FormControl>
                           <Input 
                             placeholder="your.email@company.com" 
                             type="email"
-                            className="pl-10"
+                            className="pl-10 pr-4"
                             {...field} 
                           />
                         </FormControl>
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       </div>
                       <FormMessage />
                     </FormItem>
@@ -113,20 +113,20 @@ const Login = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
                         <FormControl>
                           <Input 
                             placeholder="Enter your password" 
                             type={showPassword ? "text" : "password"}
-                            className="pl-10 pr-10"
+                            className="pl-10 pr-12"
                             {...field} 
                           />
                         </FormControl>
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-1 top-1.5 h-8 w-8 p-0"
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
