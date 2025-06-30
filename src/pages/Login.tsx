@@ -97,7 +97,7 @@ const Login = () => {
                           <Input 
                             placeholder="your.email@company.com" 
                             type="email"
-                            style={{ paddingLeft: '2.3rem', paddingRight: '0.75rem' }}
+                            className="login-form-input"
                             {...field} 
                           />
                         </FormControl>
@@ -118,7 +118,7 @@ const Login = () => {
                           <Input 
                             placeholder="Enter your password" 
                             type={showPassword ? "text" : "password"}
-                            style={{ paddingLeft: '2.3rem', paddingRight: '3rem' }}
+                            className="login-form-input-password"
                             {...field} 
                           />
                         </FormControl>

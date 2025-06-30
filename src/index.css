@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -219,6 +220,10 @@
     @apply relative transition-all duration-200;
   }
 
+  .horizontal-tab.active {
+    color: #517394 !important;
+  }
+
   .horizontal-tab.active::after {
     content: '';
     @apply absolute bottom-0 left-0 right-0 h-0.5 bg-secondary rounded-full;
@@ -232,6 +237,17 @@
     to {
       transform: scaleX(1);
     }
+  }
+
+  /* Login form specific input styling */
+  .login-form-input {
+    padding-left: 2.3rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .login-form-input-password {
+    padding-left: 2.3rem !important;
+    padding-right: 3rem !important;
   }
 }
 
