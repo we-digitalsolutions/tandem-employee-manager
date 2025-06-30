@@ -239,13 +239,13 @@
     }
   }
 
-  /* Login form specific input styling */
-  .login-form-input {
+  /* Login page specific input styling with high specificity */
+  .hr-login-email-input {
     padding-left: 2.3rem !important;
     padding-right: 0.75rem !important;
   }
 
-  .login-form-input-password {
+  .hr-login-password-input {
     padding-left: 2.3rem !important;
     padding-right: 3rem !important;
   }

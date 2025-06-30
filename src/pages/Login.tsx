@@ -97,7 +97,7 @@ const Login = () => {
                           <Input 
                             placeholder="your.email@company.com" 
                             type="email"
-                            className="login-form-input"
+                            className="hr-login-email-input"
                             {...field} 
                           />
                         </FormControl>
@@ -118,7 +118,7 @@ const Login = () => {
                           <Input 
                             placeholder="Enter your password" 
                             type={showPassword ? "text" : "password"}
-                            className="login-form-input-password"
+                            className="hr-login-password-input"
                             {...field} 
                           />
                         </FormControl>
