@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Card, 
@@ -40,23 +39,24 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { employeesData, departmentsData } from '@/data/mockData';
 import { Employee } from '@/types';
-import { Search, MoreHorizontal, UserPlus, Eye, Edit, UserMinus } from 'lucide-react';
+import { Search, MoreHorizontal, UserPlus, Eye, Edit, UserMinus, Loader2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/sonner";
 import EmployeeForm from './EmployeeForm';
+import { useEmployees } from '@/hooks/useEmployees';
+import { useDepartments } from '@/hooks/useDepartments';
 
 const EmployeeDirectory = () => {
   const [search, setSearch] = useState('');
-  const [employees, setEmployees] = useState<Employee[]>(employeesData);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeactivateDialogOpen, setIsDeactivateDialogOpen] = useState(false);
   
-  const departments = departmentsData.map(dept => dept.name);
+  const { employees, loading: employeesLoading, addEmployee, updateEmployee, deactivateEmployee } = useEmployees();
+  const { departments, loading: departmentsLoading } = useDepartments();
 
   const filteredEmployees = employees.filter(employee => 
     employee.firstName.toLowerCase().includes(search.toLowerCase()) ||
@@ -66,41 +66,47 @@ const EmployeeDirectory = () => {
     employee.position.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleAddEmployee = (data: any) => {
-    const newEmployee = {
-      ...data,
-      id: `emp-${Date.now()}`,
-      hireDate: new Date().toISOString(),
-    };
-    
-    setEmployees([...employees, newEmployee as Employee]);
-    setIsAddDialogOpen(false);
-    toast.success("Employee added successfully");
+  const handleAddEmployee = async (data: any) => {
+    try {
+      await addEmployee(data);
+      setIsAddDialogOpen(false);
+    } catch (error) {
+      // Error handling is done in the hook
+    }
   };
 
-  const handleUpdateEmployee = (data: any) => {
+  const handleUpdateEmployee = async (data: any) => {
     if (!selectedEmployee) return;
     
-    const updatedEmployees = employees.map(emp => 
-      emp.id === selectedEmployee.id ? { ...emp, ...data } : emp
-    );
-    
-    setEmployees(updatedEmployees);
-    setIsEditDialogOpen(false);
-    toast.success("Employee updated successfully");
+    try {
+      await updateEmployee(selectedEmployee.id, data);
+      setIsEditDialogOpen(false);
+      setSelectedEmployee(null);
+    } catch (error) {
+      // Error handling is done in the hook
+    }
   };
 
-  const handleDeactivateEmployee = () => {
+  const handleDeactivateEmployee = async () => {
     if (!selectedEmployee) return;
     
-    const updatedEmployees = employees.map(emp => 
-      emp.id === selectedEmployee.id ? { ...emp, status: 'inactive' as const } : emp
-    );
-    
-    setEmployees(updatedEmployees);
-    setIsDeactivateDialogOpen(false);
-    toast.success("Employee deactivated successfully");
+    try {
+      await deactivateEmployee(selectedEmployee.id);
+      setIsDeactivateDialogOpen(false);
+      setSelectedEmployee(null);
+    } catch (error) {
+      // Error handling is done in the hook
+    }
   };
+
+  if (employeesLoading || departmentsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <span className="ml-2">Loading employees...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
