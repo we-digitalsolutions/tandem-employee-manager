@@ -1,15 +1,13 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 240 247 244; /* #F0F7F4 converted to HSL */
+    --background: 0 0% 100%; /* Changed from 240 247 244 to white */
     --foreground: 210 29% 31%; /* #2F4F4F converted to HSL */
 
-    --card: 240 247 244;
+    --card: 0 0% 100%; /* Changed from 240 247 244 to white */
     --card-foreground: 210 29% 31%;
 
     --popover: 255 255 255;
@@ -21,10 +19,10 @@
     --secondary: 174 64% 48%; /* rgb(56 178 172) */
     --secondary-foreground: 255 255 255;
 
-    --muted: 240 247 244;
+    --muted: 0 0% 96%; /* Changed from 240 247 244 to light gray */
     --muted-foreground: 210 29% 45%;
 
-    --accent: 159 35% 97%; /* #f7fbf9 instead of yellow */
+    --accent: 0 0% 96%; /* Changed from 159 35% 97% to light gray */
     --accent-foreground: 210 29% 31%;
 
     --destructive: 0 84.2% 60.2%;
@@ -40,7 +38,7 @@
     --sidebar-foreground: 255 255 255;
     --sidebar-primary: 174 64% 48%; /* teal */
     --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 159 35% 97%; /* #f7fbf9 instead of yellow */
+    --sidebar-accent: 0 0% 96%; /* Changed to light gray */
     --sidebar-accent-foreground: 210 29% 31%;
     --sidebar-border: 210 20% 85%;
     --sidebar-ring: 174 64% 48%;
@@ -256,4 +254,3 @@
     padding-right: 1rem;
   }
 }
-
