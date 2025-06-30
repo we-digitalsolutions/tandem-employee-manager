@@ -92,12 +92,12 @@ const Login = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                         <FormControl>
                           <Input 
                             placeholder="your.email@company.com" 
                             type="email"
-                            className="pl-10 pr-4"
+                            className="pl-10"
                             {...field} 
                           />
                         </FormControl>
@@ -113,7 +113,7 @@ const Login = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                         <FormControl>
                           <Input 
                             placeholder="Enter your password" 
@@ -126,7 +126,7 @@ const Login = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                          className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-transparent"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
