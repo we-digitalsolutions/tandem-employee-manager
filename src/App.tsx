@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
+import { Layout } from "@/components/Layout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -31,9 +32,9 @@ const App = () => (
             
             {/* Protected Routes */}
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
-            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/user-management" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
+            <Route path="/reports" element={<ProtectedRoute><Layout activePage="reports"><Reports /></Layout></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Layout activePage="settings"><Settings /></Layout></ProtectedRoute>} />
+            <Route path="/user-management" element={<ProtectedRoute><Layout activePage="user-management"><UserManagement /></Layout></ProtectedRoute>} />
             <Route path="/employee-portal" element={<ProtectedRoute><EmployeePortal /></ProtectedRoute>} />
             
             {/* Employee Management Routes */}

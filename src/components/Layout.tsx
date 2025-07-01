@@ -171,10 +171,10 @@ function AppSidebar({ activePage }: { activePage: string }) {
             <Home className="h-5 w-5 text-secondary-foreground" />
           </div>
           <div className="min-w-0">
-            <h1 className="font-bold text-xl text-primary-foreground truncate">
+            <h1 className="font-bold text-xl text-white truncate">
               HR Manager
             </h1>
-            <p className="text-xs text-primary-foreground/70 mt-0.5 truncate">Professional Edition</p>
+            <p className="text-xs text-white/80 mt-0.5 truncate">Professional Edition</p>
           </div>
         </div>
       </SidebarHeader>
@@ -192,7 +192,7 @@ function AppSidebar({ activePage }: { activePage: string }) {
               >
                 <button 
                   onClick={(e) => handleNavigate(item.href, e)}
-                  className="flex items-center gap-3 w-full text-left text-primary-foreground"
+                  className="flex items-center gap-3 w-full text-left text-white"
                 >
                   <item.icon 
                     size={20} 
@@ -214,8 +214,8 @@ function AppSidebar({ activePage }: { activePage: string }) {
             </span>
           </div>
           <div className="text-sm flex-1 min-w-0">
-            <p className="font-medium text-primary-foreground truncate">{user?.name}</p>
-            <p className="text-primary-foreground/70 text-xs truncate">{user?.email}</p>
+            <p className="font-medium text-white truncate">{user?.name}</p>
+            <p className="text-white/80 text-xs truncate">{user?.email}</p>
           </div>
         </div>
       </SidebarFooter>

@@ -293,11 +293,11 @@
 @layer utilities {
   .text-primary-foreground, 
   .text-primary-foreground\/70 { 
-    color: #517394 !important; 
+    color: white !important; 
   }
   
   .text-secondary-foreground { 
-    color: #f0ffff !important; 
+    color: white !important; 
   }
   
   .rounded-md { 
