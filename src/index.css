@@ -260,11 +260,12 @@
   /* Login page button styling */
   .hr-login-submit-button {
     background-color: hsl(var(--secondary)) !important;
-    color: hsl(var(--secondary-foreground)) !important;
+    color: white !important;
   }
 
   .hr-login-submit-button:hover {
     background-color: hsl(var(--secondary) / 0.9) !important;
+    color: white !important;
   }
 }
 
