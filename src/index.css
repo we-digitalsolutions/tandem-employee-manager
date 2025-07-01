@@ -304,7 +304,7 @@
     border-radius: 0px !important; 
   }
   
-  .px-3 { 
+  .px-3:not(.hr-login-email-input):not(.hr-login-password-input) { 
     padding-left: 0.75rem !important; 
     padding-right: 0.75rem !important; 
   }
