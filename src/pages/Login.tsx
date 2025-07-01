@@ -143,7 +143,7 @@ const Login = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full bg-hr-teal hover:bg-hr-teal/90">
+                <Button type="submit" className="w-full hr-login-submit-button">
                   Sign In
                 </Button>
               </form>

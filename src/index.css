@@ -241,13 +241,30 @@
 
   /* Login page specific input styling with high specificity */
   .hr-login-email-input {
-    padding-left: 2.3rem !important;
+    padding-left: 2.5rem !important;
     padding-right: 0.75rem !important;
+    color: hsl(var(--foreground)) !important;
   }
 
   .hr-login-password-input {
-    padding-left: 2.3rem !important;
+    padding-left: 2.5rem !important;
     padding-right: 3rem !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .hr-login-email-input::placeholder,
+  .hr-login-password-input::placeholder {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Login page button styling */
+  .hr-login-submit-button {
+    background-color: hsl(var(--secondary)) !important;
+    color: hsl(var(--secondary-foreground)) !important;
+  }
+
+  .hr-login-submit-button:hover {
+    background-color: hsl(var(--secondary) / 0.9) !important;
   }
 }
 
