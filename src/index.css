@@ -339,6 +339,7 @@
   /* Horizontal tab active background */
   [data-state="active"] {
     background-color: #003d7ae6 !important;
+    color: hsl(var(--primary)) !important;
   }
 
   /* Add employee and add department button hover */
