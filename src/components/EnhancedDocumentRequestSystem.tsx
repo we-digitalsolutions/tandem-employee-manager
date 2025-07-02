@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,10 +9,25 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { FileText, Plus, Download, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { FileText, Plus, Download, CheckCircle, XCircle, Clock, AlertCircle, Eye } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { toast } from '@/components/ui/sonner';
-import { DocumentRequest } from '@/types';
+import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+
+interface DocumentRequest {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  documentType: 'payslip' | 'work-certificate' | 'salary-certificate' | 'mission-order' | 'custom';
+  status: 'pending' | 'processing' | 'completed' | 'declined';
+  submittedDate: string;
+  processedBy?: string;
+  processedDate?: string;
+  generatedDocumentUrl?: string;
+  comments?: string;
+  customDescription?: string;
+  additionalData?: any;
+}
 
 const mockRequests: DocumentRequest[] = [
   {
@@ -89,7 +104,10 @@ const EnhancedDocumentRequestSystem = () => {
     setRequests([...requests, newRequest]);
     setIsCreateDialogOpen(false);
     form.reset();
-    toast.success('Document request submitted successfully');
+    toast({
+      title: "Success",
+      description: "Document request submitted successfully"
+    });
   };
 
   const handleProcess = (id: string) => {
@@ -103,7 +121,10 @@ const EnhancedDocumentRequestSystem = () => {
           } 
         : req
     ));
-    toast.success('Request marked as processing');
+    toast({
+      title: "Success",
+      description: "Request marked as processing"
+    });
   };
 
   const handleComplete = (id: string) => {
@@ -125,7 +146,10 @@ const EnhancedDocumentRequestSystem = () => {
           } 
         : req
     ));
-    toast.success('Document generated successfully');
+    toast({
+      title: "Success",
+      description: "Document generated successfully"
+    });
   };
 
   const handleDecline = (id: string) => {
@@ -140,13 +164,19 @@ const EnhancedDocumentRequestSystem = () => {
           } 
         : req
     ));
-    toast.success('Request declined');
+    toast({
+      title: "Success",
+      description: "Request declined"
+    });
   };
 
   const handleDownload = (request: DocumentRequest) => {
     if (request.generatedDocumentUrl) {
       // In a real app, this would download the actual file
-      toast.success(`Downloading ${request.documentType} for ${request.employeeName}`);
+      toast({
+        title: "Download",
+        description: `Downloading ${request.documentType} for ${request.employeeName}`
+      });
       console.log('Downloading:', request.generatedDocumentUrl);
     }
   };
