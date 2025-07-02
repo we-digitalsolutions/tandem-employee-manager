@@ -279,58 +279,115 @@ export type Database = {
       }
       employees: {
         Row: {
+          address: string | null
           avatar: string | null
+          bank_account_number: string | null
+          bank_name: string | null
+          bank_routing_number: string | null
+          city: string | null
+          country: string | null
           created_at: string | null
+          date_of_birth: string | null
           department: string
           email: string
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          emergency_contact_relationship: string | null
+          employment_type: string | null
           first_name: string
           hire_date: string
           id: string
           job_description: string | null
           last_name: string
           manager_id: string | null
+          notes: string | null
+          office_location: string | null
           password: string | null
           phone: string | null
           position: string
+          postal_code: string | null
           role: Database["public"]["Enums"]["user_role"] | null
+          salary: number | null
+          salary_currency: string | null
+          state: string | null
           status: Database["public"]["Enums"]["employee_status"] | null
+          tax_id: string | null
           updated_at: string | null
+          work_schedule: string | null
         }
         Insert: {
+          address?: string | null
           avatar?: string | null
+          bank_account_number?: string | null
+          bank_name?: string | null
+          bank_routing_number?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
+          date_of_birth?: string | null
           department: string
           email: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relationship?: string | null
+          employment_type?: string | null
           first_name: string
           hire_date: string
           id?: string
           job_description?: string | null
           last_name: string
           manager_id?: string | null
+          notes?: string | null
+          office_location?: string | null
           password?: string | null
           phone?: string | null
           position: string
+          postal_code?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          salary?: number | null
+          salary_currency?: string | null
+          state?: string | null
           status?: Database["public"]["Enums"]["employee_status"] | null
+          tax_id?: string | null
           updated_at?: string | null
+          work_schedule?: string | null
         }
         Update: {
+          address?: string | null
           avatar?: string | null
+          bank_account_number?: string | null
+          bank_name?: string | null
+          bank_routing_number?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
+          date_of_birth?: string | null
           department?: string
           email?: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relationship?: string | null
+          employment_type?: string | null
           first_name?: string
           hire_date?: string
           id?: string
           job_description?: string | null
           last_name?: string
           manager_id?: string | null
+          notes?: string | null
+          office_location?: string | null
           password?: string | null
           phone?: string | null
           position?: string
+          postal_code?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          salary?: number | null
+          salary_currency?: string | null
+          state?: string | null
           status?: Database["public"]["Enums"]["employee_status"] | null
+          tax_id?: string | null
           updated_at?: string | null
+          work_schedule?: string | null
         }
         Relationships: [
           {
@@ -881,6 +938,60 @@ export type Database = {
           {
             foreignKeyName: "reports_generated_by_fkey"
             columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      salary_history: {
+        Row: {
+          approved_by: string | null
+          created_at: string | null
+          currency: string | null
+          effective_date: string
+          employee_id: string
+          id: string
+          new_salary: number
+          previous_salary: number | null
+          reason: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_by?: string | null
+          created_at?: string | null
+          currency?: string | null
+          effective_date: string
+          employee_id: string
+          id?: string
+          new_salary: number
+          previous_salary?: number | null
+          reason?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_by?: string | null
+          created_at?: string | null
+          currency?: string | null
+          effective_date?: string
+          employee_id?: string
+          id?: string
+          new_salary?: number
+          previous_salary?: number | null
+          reason?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salary_history_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "salary_history_employee_id_fkey"
+            columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]

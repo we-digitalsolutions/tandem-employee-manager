@@ -15,6 +15,38 @@ export interface Employee {
   managerId?: string;
   leaveBalances?: LeaveBalance[];
   documents?: EmployeeDocument[];
+  // Extended employee information
+  salary?: number;
+  salaryCurrency?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  emergencyContactRelationship?: string;
+  dateOfBirth?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+  employmentType?: string;
+  workSchedule?: string;
+  officeLocation?: string;
+  notes?: string;
+  bankAccountNumber?: string;
+  bankRoutingNumber?: string;
+  bankName?: string;
+  taxId?: string;
+}
+
+export interface SalaryHistory {
+  id: string;
+  employeeId: string;
+  previousSalary?: number;
+  newSalary: number;
+  currency: string;
+  effectiveDate: string;
+  reason?: string;
+  approvedBy?: string;
+  createdAt: string;
 }
 
 export interface Department {
