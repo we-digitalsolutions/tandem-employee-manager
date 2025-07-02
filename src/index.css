@@ -338,7 +338,7 @@
 
   /* Horizontal tab active background */
   [data-state="active"] {
-    background-color: #003d7ae6 !important;
+    background-color: white !important;
     color: hsl(var(--primary)) !important;
   }
 
