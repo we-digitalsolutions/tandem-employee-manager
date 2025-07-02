@@ -337,15 +337,13 @@
   }
 
   /* Horizontal tab active background */
-  .data-\[value\=\"employees\"\]\[data-state\=\"active\"] button,
-  .data-\[value\=\"departments\"\]\[data-state\=\"active\"] button,
-  .bg-primary[data-state="active"] {
+  [data-state="active"] {
     background-color: #003d7ae6 !important;
   }
 
   /* Add employee and add department button hover */
-  button:has(> .lucide-plus):hover,
-  [role="button"]:has(> .lucide-plus):hover {
+  button:has(.lucide-plus):hover,
+  [role="button"]:has(.lucide-plus):hover {
     background-color: #003d7ae6 !important;
   }
 
