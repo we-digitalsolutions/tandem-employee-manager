@@ -32,7 +32,26 @@ export const useEmployees = () => {
         avatar: emp.avatar || undefined,
         jobDescription: emp.job_description || undefined,
         role: emp.role as 'admin' | 'manager' | 'employee' || 'employee',
-        managerId: emp.manager_id || undefined
+        managerId: emp.manager_id || undefined,
+        salary: emp.salary || undefined,
+        salaryCurrency: emp.salary_currency || undefined,
+        emergencyContactName: emp.emergency_contact_name || undefined,
+        emergencyContactPhone: emp.emergency_contact_phone || undefined,
+        emergencyContactRelationship: emp.emergency_contact_relationship || undefined,
+        dateOfBirth: emp.date_of_birth || undefined,
+        address: emp.address || undefined,
+        city: emp.city || undefined,
+        state: emp.state || undefined,
+        postalCode: emp.postal_code || undefined,
+        country: emp.country || undefined,
+        employmentType: emp.employment_type || undefined,
+        workSchedule: emp.work_schedule || undefined,
+        officeLocation: emp.office_location || undefined,
+        notes: emp.notes || undefined,
+        bankAccountNumber: emp.bank_account_number || undefined,
+        bankRoutingNumber: emp.bank_routing_number || undefined,
+        bankName: emp.bank_name || undefined,
+        taxId: emp.tax_id || undefined
       }));
 
       setEmployees(formattedEmployees);
@@ -62,7 +81,26 @@ export const useEmployees = () => {
           hire_date: new Date().toISOString().split('T')[0],
           status: employeeData.status,
           job_description: employeeData.jobDescription,
-          role: employeeData.role || 'employee'
+          role: employeeData.role || 'employee',
+          salary: employeeData.salary,
+          salary_currency: employeeData.salaryCurrency,
+          emergency_contact_name: employeeData.emergencyContactName,
+          emergency_contact_phone: employeeData.emergencyContactPhone,
+          emergency_contact_relationship: employeeData.emergencyContactRelationship,
+          date_of_birth: employeeData.dateOfBirth,
+          address: employeeData.address,
+          city: employeeData.city,
+          state: employeeData.state,
+          postal_code: employeeData.postalCode,
+          country: employeeData.country,
+          employment_type: employeeData.employmentType,
+          work_schedule: employeeData.workSchedule,
+          office_location: employeeData.officeLocation,
+          notes: employeeData.notes,
+          bank_account_number: employeeData.bankAccountNumber,
+          bank_routing_number: employeeData.bankRoutingNumber,
+          bank_name: employeeData.bankName,
+          tax_id: employeeData.taxId
         })
         .select()
         .single();
@@ -82,7 +120,9 @@ export const useEmployees = () => {
         avatar: data.avatar || undefined,
         jobDescription: data.job_description || undefined,
         role: data.role || 'employee',
-        managerId: data.manager_id || undefined
+        managerId: data.manager_id || undefined,
+        salary: data.salary || undefined,
+        salaryCurrency: data.salary_currency || undefined
       };
 
       setEmployees(prev => [newEmployee, ...prev]);
