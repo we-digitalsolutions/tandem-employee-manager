@@ -304,9 +304,13 @@
     border-radius: 0px !important; 
   }
   
-  .px-3:not(.hr-login-email-input):not(.hr-login-password-input) { 
+  .px-3:not(.hr-login-email-input):not(.hr-login-password-input):not([type="search"]):not(.search-input) { 
     padding-left: 0.75rem !important; 
     padding-right: 0.75rem !important; 
+  }
+
+  .search-input, [type="search"] {
+    padding-left: 2.5rem !important;
   }
 
   .sidebar-nav-item.active, 
