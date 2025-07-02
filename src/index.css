@@ -314,8 +314,20 @@
   }
 
   /* Fix search field padding */
-  input[type="search"], .search-input, input[placeholder*="Search"] {
+  input[type="search"], 
+  .search-input, 
+  input[placeholder*="Search"],
+  input[placeholder*="search"] {
     padding-left: 2.5rem !important;
+  }
+
+  /* Ensure search field text and placeholder have correct padding */
+  input[type="search"]::placeholder,
+  .search-input::placeholder,
+  input[placeholder*="Search"]::placeholder,
+  input[placeholder*="search"]::placeholder {
+    padding-left: 0 !important;
+    text-indent: 0 !important;
   }
 
   .sidebar-nav-item.active, 
@@ -346,6 +358,7 @@
   button:has(.lucide-plus):hover,
   [role="button"]:has(.lucide-plus):hover {
     background-color: #003d7ae6 !important;
+    color: white !important;
   }
 
   /* Navbar active hover text color */
