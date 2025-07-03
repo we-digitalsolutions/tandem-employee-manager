@@ -11,31 +11,43 @@ export type Database = {
     Tables: {
       approval_records: {
         Row: {
+          approval_status: string | null
           approver_id: string
           approver_name: string
           approver_role: string
           comments: string | null
+          created_at: string | null
           date: string | null
           decision: string
           id: string
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
+          approval_status?: string | null
           approver_id: string
           approver_name: string
           approver_role: string
           comments?: string | null
+          created_at?: string | null
           date?: string | null
           decision: string
           id?: string
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
+          approval_status?: string | null
           approver_id?: string
           approver_name?: string
           approver_role?: string
           comments?: string | null
+          created_at?: string | null
           date?: string | null
           decision?: string
           id?: string
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }

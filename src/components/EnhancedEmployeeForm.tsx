@@ -36,6 +36,7 @@ const enhancedEmployeeFormSchema = z.object({
   department: z.string().min(2, "Department is required"),
   employmentType: z.string().optional(),
   status: z.enum(["active", "inactive", "onLeave"]),
+  role: z.enum(["admin", "manager", "employee"]),
   workSchedule: z.string().optional(),
   officeLocation: z.string().optional(),
   managerId: z.string().optional(),
@@ -87,6 +88,7 @@ const EnhancedEmployeeForm = ({ employee, onSubmit, onCancel, departments }: Enh
       department: employee.department,
       employmentType: employee.employmentType || "full-time",
       status: employee.status,
+      role: employee.role || "employee",
       workSchedule: employee.workSchedule || "",
       officeLocation: employee.officeLocation || "",
       managerId: employee.managerId || "",
@@ -116,6 +118,7 @@ const EnhancedEmployeeForm = ({ employee, onSubmit, onCancel, departments }: Enh
       department: "",
       employmentType: "full-time",
       status: "active",
+      role: "employee",
       workSchedule: "",
       officeLocation: "",
       managerId: "",
@@ -323,6 +326,32 @@ const EnhancedEmployeeForm = ({ employee, onSubmit, onCancel, departments }: Enh
                         <SelectItem value="active">Active</SelectItem>
                         <SelectItem value="inactive">Inactive</SelectItem>
                         <SelectItem value="onLeave">On Leave</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role *</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="employee">Employee</SelectItem>
+                        <SelectItem value="manager">Manager</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

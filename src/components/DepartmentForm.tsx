@@ -13,12 +13,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "@/components/ui/sonner";
 import { Department } from "@/types";
+import { useEmployees } from "@/hooks/useEmployees";
 
 const departmentFormSchema = z.object({
   name: z.string().min(2, "Department name must be at least 2 characters"),
-  manager: z.string().min(2, "Manager name is required"),
+  manager: z.string().min(1, "Manager is required"),
   budget: z.coerce.number().min(0, "Budget must be a positive number"),
 });
 
@@ -30,6 +38,11 @@ interface DepartmentFormProps {
 }
 
 const DepartmentForm = ({ department, onSubmit }: DepartmentFormProps) => {
+  const { employees } = useEmployees();
+  
+  // Filter employees to get only managers and admins
+  const managers = employees.filter(emp => emp.role === 'manager' || emp.role === 'admin');
+  
   const form = useForm<DepartmentFormValues>({
     resolver: zodResolver(departmentFormSchema),
     defaultValues: department ? {
@@ -70,9 +83,23 @@ const DepartmentForm = ({ department, onSubmit }: DepartmentFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Department Manager</FormLabel>
-              <FormControl>
-                <Input placeholder="John Smith" {...field} />
-              </FormControl>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a manager" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {managers.map((manager) => (
+                    <SelectItem key={manager.id} value={`${manager.firstName} ${manager.lastName}`}>
+                      {manager.firstName} {manager.lastName} - {manager.position}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
