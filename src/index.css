@@ -313,19 +313,25 @@
     padding-left: 2.5rem !important;
   }
 
-  /* Fix search field padding */
+  /* Force 2.5rem left padding for search fields */
   input[type="search"], 
   .search-input, 
   input[placeholder*="Search"],
-  input[placeholder*="search"] {
+  input[placeholder*="search"],
+  input[placeholder*="employees"],
+  input[placeholder*="departments"],
+  input[placeholder*="users"] {
     padding-left: 2.5rem !important;
   }
 
-  /* Ensure search field text and placeholder have correct padding */
+  /* Ensure search field placeholders don't have extra padding */
   input[type="search"]::placeholder,
   .search-input::placeholder,
   input[placeholder*="Search"]::placeholder,
-  input[placeholder*="search"]::placeholder {
+  input[placeholder*="search"]::placeholder,
+  input[placeholder*="employees"]::placeholder,
+  input[placeholder*="departments"]::placeholder,
+  input[placeholder*="users"]::placeholder {
     padding-left: 0 !important;
     text-indent: 0 !important;
   }
