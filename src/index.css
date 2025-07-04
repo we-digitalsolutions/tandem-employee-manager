@@ -313,25 +313,19 @@
     padding-left: 2.5rem !important;
   }
 
-  /* Force 2.5rem left padding for search fields */
-  input[type="search"], 
-  .search-input, 
-  input[placeholder*="Search"],
-  input[placeholder*="search"],
-  input[placeholder*="employees"],
-  input[placeholder*="departments"],
-  input[placeholder*="users"] {
+  /* Force 2.5rem left padding for specific search fields */
+  #employee-search-field,
+  #enhanced-employee-search-field,
+  #department-search-field,
+  #user-search-field {
     padding-left: 2.5rem !important;
   }
 
   /* Ensure search field placeholders don't have extra padding */
-  input[type="search"]::placeholder,
-  .search-input::placeholder,
-  input[placeholder*="Search"]::placeholder,
-  input[placeholder*="search"]::placeholder,
-  input[placeholder*="employees"]::placeholder,
-  input[placeholder*="departments"]::placeholder,
-  input[placeholder*="users"]::placeholder {
+  #employee-search-field::placeholder,
+  #enhanced-employee-search-field::placeholder,
+  #department-search-field::placeholder,
+  #user-search-field::placeholder {
     padding-left: 0 !important;
     text-indent: 0 !important;
   }
