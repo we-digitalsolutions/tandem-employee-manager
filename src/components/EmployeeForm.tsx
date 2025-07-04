@@ -32,6 +32,7 @@ const employeeFormSchema = z.object({
   position: z.string().min(2, "Position is required"),
   department: z.string().min(2, "Department is required"),
   status: z.enum(["active", "inactive", "onLeave"]),
+  role: z.enum(["employee", "manager", "admin"]),
   jobDescription: z.string().optional(),
 });
 
@@ -54,6 +55,7 @@ const EmployeeForm = ({ employee, onSubmit, departments }: EmployeeFormProps) =>
       position: employee.position,
       department: employee.department,
       status: employee.status,
+      role: employee.role || "employee",
       jobDescription: employee.jobDescription || "",
     } : {
       firstName: "",
@@ -63,6 +65,7 @@ const EmployeeForm = ({ employee, onSubmit, departments }: EmployeeFormProps) =>
       position: "",
       department: "",
       status: "active",
+      role: "employee",
       jobDescription: "",
     }
   });
@@ -192,6 +195,32 @@ const EmployeeForm = ({ employee, onSubmit, departments }: EmployeeFormProps) =>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="inactive">Inactive</SelectItem>
                     <SelectItem value="onLeave">On Leave</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="employee">Employee</SelectItem>
+                    <SelectItem value="manager">Manager</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
