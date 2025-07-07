@@ -365,4 +365,14 @@
   .sidebar-nav-item.active:hover {
     color: white !important;
   }
+
+  /* Custom background for popover */
+  .bg-popover {
+    background-color: #fff;
+  }
+
+  /* Custom padding for avatar components */
+  .flex.h-10.w-10.items-center.justify-center.rounded-full.bg-primary.text-primary-foreground.font-medium.shadow-md {
+    padding: 15px;
+  }
 }
